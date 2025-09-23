@@ -135,20 +135,25 @@ export const setAvailableHours = async (providerId, day, originalHourSelected = 
     }
     const appointmentsByProviderAndDate = await getAppointmentByProviderAndDate(providerId, date)
     const bookedHours = appointmentsByProviderAndDate.map(a => a.dateInfo.hour).flat()
+    const now = new Date()
+    const isToday = date.toDateString() === now.toDateString()
+    var hoursBeforeNow = []
+    
+    if (isToday) {
+        hoursBeforeNow = day.availableHours.map(hour => {
+            const [h, m] = hour.split(':').map(Number)
+            var appointmentDate = new Date()
+            appointmentDate.setHours(h, m, 0, 0)
+            if (appointmentDate < now) {
+                return hour
+            }
+        })
+    }
+
     if (day.availableHours.length > 0) {
-        const now = new Date()
-        const isToday = date.toDateString() === now.toDateString()
-        var hourNow = now.getHours()
-        var LastHour = day.availableHours[day.availableHours.length - 1].split(':')[0]
-        var blockAll = null
-
-        if (isToday && (hourNow >= LastHour)) {
-            blockAll = false
-        }
-
         var availableHoursWithStatus = day.availableHours.map(hour => ({
             hour,
-            available: isEmpty(blockAll) ? !bookedHours.includes(hour) : blockAll,
+            available: (hoursBeforeNow.includes(hour) || bookedHours.includes(hour)) ? false : true,
             isEditing: bookedHours.includes(hour) && originalHourSelected.includes(hour)
         }))
     }

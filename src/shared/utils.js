@@ -1,8 +1,4 @@
-import React from "react";
 import { PatternFormat } from "react-number-format";
-import { parse } from "uuid";
-import { getDay } from "date-fns";
-import { addAppointment, getAppointmentByProviderAndDate } from '../store/collections/appointmentWorker';
 
 export const PhoneNumberInput = ({ value, onChange }) => {
     return (

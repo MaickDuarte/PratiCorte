@@ -38,7 +38,11 @@ class History extends React.Component {
 
     applyFilter = async () => {
         var appointments = await getAppointmentByProviderAndDate(this.state.providersIds, this.state.startDate, this.state.endDate)
-        console.log(appointments)
+        this.setState({ 
+            allAppointments: appointments,
+         },() => {
+            this.groupByProviderAndDate()
+        })
     }
 
     handleDateChange = (field, date) => {
@@ -46,7 +50,22 @@ class History extends React.Component {
     }
 
     groupByProviderAndDate = () => {
-    }
+        const allAppointments = this.state.allAppointments
+        const groupedAppointments = allAppointments.reduce((acc, appointment) => {
+            const providerId = appointment.provider.id
+            const providerName = appointment.provider.nome
+            if (!acc[providerId]) {
+                acc[providerId] = {
+                    nome: providerName,
+                    appointments: []
+                }
+            }
+            acc[providerId].appointments.push(appointment)
+            return acc
+        }, {})
+        // ainda preciso ordenar por horario de agendamento e por data
+    return groupedAppointments
+}
 
     render() {
         return (

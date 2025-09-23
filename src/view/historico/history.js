@@ -4,6 +4,8 @@ import { getEstabelecimento } from "../../config/auth";
 import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 import { Portuguese } from "flatpickr/dist/l10n/pt.js";
+import { getAppointmentByProviderAndDate } from "../../store/collections/appointmentWorker";
+import { getActiveUsersAppointmentAllowed } from '../../store/collections/userWorker';
 
 class History extends React.Component {
     constructor(props) {
@@ -14,15 +16,33 @@ class History extends React.Component {
             startDate: new Date(),
             endDate: new Date(),
             allAppointments: [],
-            filteredAppointments: []
+            filteredAppointments: [],
+            providersIds: []
         }
     }
 
     componentDidMount() {
-        this.applyFilter()
+        this.load()
     }
 
-    applyFilter = () => {
+    load = async () => {
+        const providers = await getActiveUsersAppointmentAllowed(this.state.establishment.id)
+        const providersIds = providers.map(p => p.id)
+        this.setState({ 
+            providers: providers,
+            providersIds: providersIds
+         },() => {
+            this.applyFilter()
+        })
+    }
+
+    applyFilter = async () => {
+        var appointments = await getAppointmentByProviderAndDate(this.state.providersIds, this.state.startDate, this.state.endDate)
+        console.log(appointments)
+    }
+
+    handleDateChange = (field, date) => {
+        this.setState({ [field]: date[0] })
     }
 
     groupByProviderAndDate = () => {

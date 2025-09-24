@@ -177,6 +177,7 @@ export const groupByProviderAndDate = (allAppointments) => {
         const providerId = appointment.provider.id
         const providerName = appointment.provider.nome
         const dateKey = appointment.dateInfo.date.seconds
+        const titleDayOfWeek = appointment.dateInfo.titleDayOfWeek
 
         var provider = acc.find(p => p.id === providerId)
         if (!provider) {
@@ -186,7 +187,7 @@ export const groupByProviderAndDate = (allAppointments) => {
 
         var dateGroup = provider.dates.find(d => d.date === dateKey)
         if (!dateGroup) {
-            dateGroup = { date: dateKey, appointments: [] }
+            dateGroup = { date: dateKey, appointments: [], titleDayOfWeek }
             provider.dates.push(dateGroup)
         }
         

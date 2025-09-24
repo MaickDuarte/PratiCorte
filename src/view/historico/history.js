@@ -6,6 +6,7 @@ import "flatpickr/dist/flatpickr.min.css";
 import { Portuguese } from "flatpickr/dist/l10n/pt.js";
 import { getAppointmentByProviderAndDate } from "../../store/collections/appointmentWorker";
 import { getActiveUsersAppointmentAllowed } from '../../store/collections/userWorker';
+import { groupByProviderAndDate } from '../../services/appointment/appointmentService';
 
 class History extends React.Component {
     constructor(props) {
@@ -50,22 +51,9 @@ class History extends React.Component {
     }
 
     groupByProviderAndDate = () => {
-        const allAppointments = this.state.allAppointments
-        const groupedAppointments = allAppointments.reduce((acc, appointment) => {
-            const providerId = appointment.provider.id
-            const providerName = appointment.provider.nome
-            if (!acc[providerId]) {
-                acc[providerId] = {
-                    nome: providerName,
-                    appointments: []
-                }
-            }
-            acc[providerId].appointments.push(appointment)
-            return acc
-        }, {})
-        // ainda preciso ordenar por horario de agendamento e por data
-    return groupedAppointments
-}
+        var allAppointmentsFiltered = groupByProviderAndDate(this.state.allAppointments)
+        console.log(allAppointmentsFiltered)
+    }
 
     render() {
         return (

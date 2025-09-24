@@ -171,3 +171,36 @@ export const hourStillAvailable = async (availableHours, hours) => {
 export const verifyServiceTimeInBlocks = (service) => {
     return Math.ceil(convertTimeToMinutes(service.duracao) / 60)
 }
+
+export const groupByProviderAndDate = (allAppointments) => {
+    const providers = allAppointments.reduce((acc, appointment) => {
+        const providerId = appointment.provider.id
+        const providerName = appointment.provider.nome
+        const dateKey = appointment.dateInfo.date.seconds
+
+        var provider = acc.find(p => p.id === providerId)
+        if (!provider) {
+            provider = { id: providerId, nome: providerName, dates: [] }
+            acc.push(provider)
+        }
+
+        var dateGroup = provider.dates.find(d => d.date === dateKey)
+        if (!dateGroup) {
+            dateGroup = { date: dateKey, appointments: [] }
+            provider.dates.push(dateGroup)
+        }
+        
+        dateGroup.appointments.push(appointment)
+        return acc
+    }, [])
+
+    const sortedProviders = providers.map(provider => {
+        const sortedDates = provider.dates.map(d => ({...d,appointments: d.appointments.sort((a, b) => a.dateInfo.hour[0].localeCompare(b.dateInfo.hour[0]))})).sort((a, b) => a.date - b.date)
+        return {
+            ...provider,
+            dates: sortedDates
+        }
+    })
+
+    return sortedProviders
+}

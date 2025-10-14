@@ -30,74 +30,197 @@ class OpeningHours extends React.Component {
     }
 
     load = async () => {
-        var horarios = getHorarios()
-        if (isEmpty(horarios)) {
-            horarios = await getOpeningHours(this.state.establishment.id)
+        try {
+            console.log('Carregando horários para establishment:', this.state.establishment.id)
+            const horarios = await getOpeningHours(this.state.establishment.id)
+            console.log('Horários retornados do banco:', horarios)
+            
+            if (horarios && horarios.length > 0 && horarios[0].horarios) {
+                console.log('Carregando horários salvos:', horarios[0].horarios)
+                this.setState({ 
+                    horarios: horarios[0].horarios, 
+                    horariosId: horarios[0].id 
+                })
+            } else {
+                console.log('Nenhum horário encontrado, mantendo padrão')
+            }
+        } catch (error) {
+            console.error('Erro ao carregar horários:', error)
+            // Manter os horários padrão em caso de erro
         }
-        if (!isEmpty(horarios)) {
-            this.setState({ horarios: horarios.horarios })
-            this.setState({ horariosId: horarios.id })
-        }
-    }
-
-    handleChangeHorario = (e, index, field) => {
-        const value = e.target.value
-        const horarios = this.state.horarios
-        horarios[index][field] = value
-        this.setState({ horarios: horarios })
     }
 
     handleChangeStatus = (index) => {
-        const horarios = [...this.state.horarios];
-        horarios[index].status = horarios[index].status == "active" ? "inactive" : "active";
-        this.setState({ horarios: horarios })
+        const newHorarios = [...this.state.horarios]
+        newHorarios[index].status = newHorarios[index].status === "active" ? "inactive" : "active"
+        this.setState({ horarios: newHorarios })
+    }
+
+    handleChangeHorario = (e, index, field) => {
+        const newHorarios = [...this.state.horarios]
+        newHorarios[index][field] = e.target.value
+        this.setState({ horarios: newHorarios })
     }
 
     getStatus = (index) => {
-        return this.state.horarios[index]?.status == "active" ? true : false
+        if (!this.state.horarios || !this.state.horarios[index]) {
+            return false
+        }
+        return this.state.horarios[index].status === "active"
     }
 
     save = async () => {
+        try {
+            console.log('Iniciando salvamento dos horários...')
+            console.log('Establishment ID:', this.state.establishment.id)
         const data = {
-            estabelecimentoId: this.state.establishment.id,
-            horarios: this.state.horarios,
-            id: this.state.horariosId,
+                establishmentId: this.state.establishment.id,
+                horarios: this.state.horarios
         }
+            console.log('Dados a serem salvos:', data)
+            
         if (this.verifyFields(data)) {
-            for (let i = 0; i < data.horarios.length; i++) {
-                if (isEmpty(data.horarios[i].day)) {
-                    data.horarios[i].day = i
-                }
-            }
-            try {
-                if (this.state.horariosId === "") {
-                    await addOpeningHours(data)
+                console.log('Validação passou, salvando...')
+                if (this.state.horariosId) {
+                    console.log('Atualizando horários existentes...')
+                    const updateData = { id: this.state.horariosId, ...data }
+                    await updateOpeningHours(updateData)
                 } else {
-                    await updateOpeningHours(data)
+                    console.log('Criando novos horários...')
+                    const result = await addOpeningHours(data)
+                    console.log('Resultado da criação:', result)
+                    if (result && result.id) {
+                        this.setState({ horariosId: result.id })
+                        console.log('ID do horário salvo:', result.id)
+                    } else {
+                        console.error('Erro: ID não retornado após criação')
+                    }
                 }
                 setHorarios(data)
-                alert("Horário de funcionamento salvo com sucesso!")
+                alert("Horários salvos com sucesso!")
+                } else {
+                console.log('Validação falhou')
+                }
             } catch (error) {
-                console.error("Erro ao cadastrar horário de funcionamento:", error.message)
-            }
+            console.error('Erro ao salvar horários:', error)
+            alert("Erro ao salvar horários. Tente novamente.")
         }
     }
 
     verifyFields = (data) => {
+        console.log('Verificando campos:', data)
+        
+        if (!data || !data.horarios || !Array.isArray(data.horarios)) {
+            console.log('Dados inválidos:', data)
+            alert("Dados de horários inválidos.")
+            return false
+        }
+        
+        // Verificar se pelo menos um dia está ativo
+        const hasActiveDay = data.horarios.some(horario => horario.status === "active")
+        if (!hasActiveDay) {
+            alert("Selecione pelo menos um dia da semana para funcionar.")
+            return false
+        }
+        
         for (let i = 0; i < data.horarios.length; i++) {
-            if (isEmpty((data.horarios[i].horarioInicio)) || isEmpty((data.horarios[i].horarioFim) && data.horarios[i].status === "active")) {
-                alert("Preencha o horario de inicio e fim.")
+            const horario = data.horarios[i]
+            if (!horario) continue
+            
+            // Só validar se o dia estiver ativo
+            if (horario.status === "active") {
+                if (isEmpty(horario.horarioInicio) || isEmpty(horario.horarioFim)) {
+                    alert(`Preencha o horário de início e fim para ${horario.dia}.`)
                 return false
             }
-            if (data.horarios[i].horarioInicio > data.horarios[i].horarioFim) {
-                alert("O horario de inicio deve ser menor que o horario de fim.")
+                if (horario.horarioInicio >= horario.horarioFim) {
+                    alert(`O horário de início deve ser menor que o horário de fim para ${horario.dia}.`)
                 return false
             }
-            if (!isValidMinutes(data.horarios[i].horarioInicio) || !isValidMinutes(data.horarios[i].horarioFim)) {
+                if (!isValidMinutes(horario.horarioInicio) || !isValidMinutes(horario.horarioFim)) {
+                    alert(`Horários inválidos para ${horario.dia}.`)
                 return false
             }
         }
+        }
+        console.log('Validação passou')
         return true
+    }
+
+    renderDayCard = (dayIndex, dayName, icon) => {
+        return (
+            <div className="col-12" key={dayIndex}>
+                <div className="card border-0 shadow-sm" style={{ 
+                    borderRadius: 'var(--radius-lg)',
+                    background: 'var(--bg-secondary)'
+                }}>
+                    <div className="card-body p-3">
+                        <div className="d-flex align-items-center justify-content-between">
+                            <div className="d-flex align-items-center">
+                                <div className="form-check form-switch me-3">
+                                    <input 
+                                        className="form-check-input" 
+                                        type="checkbox" 
+                                        id={`switch-${dayName.toLowerCase()}`} 
+                                        checked={this.getStatus(dayIndex)} 
+                                        onChange={() => this.handleChangeStatus(dayIndex)}
+                                    />
+                                </div>
+                                <div style={{ 
+                                    fontSize: 'var(--font-size-lg)', 
+                                    fontWeight: 'var(--font-weight-semibold)',
+                                    color: 'var(--text-primary)',
+                                    minWidth: '120px'
+                                }}>
+                                    <i className={`fas ${icon} me-2`}></i>
+                                    {dayName}
+                                </div>
+                            </div>
+                            <div className="d-flex align-items-center gap-3">
+                                <div>
+                                    <label style={{ 
+                                        fontSize: 'var(--font-size-xs)', 
+                                        color: 'var(--text-tertiary)',
+                                        fontWeight: 'var(--font-weight-medium)',
+                                        marginBottom: 'var(--spacing-xs)'
+                                    }}>
+                                        Início
+                                    </label>
+                                    <TimeInput 
+                                        value={this.state.horarios[dayIndex].horarioInicio} 
+                                        disabled={!this.getStatus(dayIndex)}
+                                        onChange={(e) => this.handleChangeHorario(e, dayIndex, "horarioInicio")} 
+                                        style={{
+                                            width: '100px',
+                                            textAlign: 'center'
+                                        }}
+                                    />
+                                </div>
+                                <div>
+                                    <label style={{ 
+                                        fontSize: 'var(--font-size-xs)', 
+                                        color: 'var(--text-tertiary)',
+                                        fontWeight: 'var(--font-weight-medium)',
+                                        marginBottom: 'var(--spacing-xs)'
+                                    }}>
+                                        Fim
+                                    </label>
+                                    <TimeInput 
+                                        value={this.state.horarios[dayIndex].horarioFim} 
+                                        disabled={!this.getStatus(dayIndex)}
+                                        onChange={(e) => this.handleChangeHorario(e, dayIndex, "horarioFim")} 
+                                        style={{
+                                            width: '100px',
+                                            textAlign: 'center'
+                                        }}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
     }
 
     render() {
@@ -105,96 +228,94 @@ class OpeningHours extends React.Component {
             <>
                 <NavBar/>
                 <div className="d-flex justify-content-center py-5">
-                    <div className="card p-4 shadow bg-white rounded w-auto">
-                        <h5 className="mb-4">Configurar horário de funcionamento</h5>
-                        <div className="d-flex flex-column gap-2">
-                            <div className="d-flex align-items-center mb-2">
-                                <div className="form-check form-switch">
-                                    <input className="form-check-input" type="checkbox" id="switch-segunda" checked={this.getStatus(0)} onChange={() => this.handleChangeStatus(0)}/>
+                    <div className="card shadow-lg border-0" style={{ 
+                        borderRadius: 'var(--radius-xl)', 
+                        maxWidth: '800px', 
+                        width: '100%',
+                        background: 'var(--bg-primary)'
+                    }}>
+                        <div className="card-header" style={{ 
+                            background: 'linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%)',
+                            color: 'var(--text-inverse)',
+                            border: 'none',
+                            borderRadius: 'var(--radius-xl) var(--radius-xl) 0 0'
+                        }}>
+                            <h4 className="mb-0 text-center" style={{ 
+                                fontSize: 'var(--font-size-xl)', 
+                                fontWeight: 'var(--font-weight-bold)'
+                            }}>
+                                <i className="fas fa-clock me-2"></i>
+                                Configurar Horários de Funcionamento
+                            </h4>
                                 </div>
-                                <div className="text-start pe-3 text-nowrap fw-bold" style={{ width: "130px" }}>Domingo</div>
-                                <div className="me-1 text-nowrap">Início:</div>
-                                <TimeInput value={this.state.horarios[0].horarioInicio} disabled={!this.getStatus(0)}
-                                    onChange={(e) => this.handleChangeHorario(e, 0, "horarioInicio")} />
-                                <div className="ms-3 me-1 text-nowrap">Fim:</div>
-                                <TimeInput value={this.state.horarios[0].horarioFim} disabled={!this.getStatus(0)}
-                                    onChange={(e) => this.handleChangeHorario(e, 0, "horarioFim")} />
+                        
+                        <div className="card-body p-4">
+                            <div className="text-center mb-4">
+                                <p style={{ 
+                                    color: 'var(--text-secondary)', 
+                                    fontSize: 'var(--font-size-sm)',
+                                    margin: 0
+                                }}>
+                                    Configure os horários de funcionamento para cada dia da semana
+                                </p>
                             </div>
-                            <div className="d-flex align-items-center mb-2">
-                                <div className="form-check form-switch">
-                                    <input className="form-check-input" type="checkbox" id="switch-segunda" checked={this.getStatus(1)} onChange={() => this.handleChangeStatus(1)}/>
+                            
+                            <div className="row g-3">
+                                {this.renderDayCard(0, "Domingo", "fa-calendar-day")}
+                                {this.renderDayCard(1, "Segunda-feira", "fa-calendar-day")}
+                                {this.renderDayCard(2, "Terça-feira", "fa-calendar-day")}
+                                {this.renderDayCard(3, "Quarta-feira", "fa-calendar-day")}
+                                {this.renderDayCard(4, "Quinta-feira", "fa-calendar-day")}
+                                {this.renderDayCard(5, "Sexta-feira", "fa-calendar-day")}
+                                {this.renderDayCard(6, "Sábado", "fa-calendar-day")}
                                 </div>
-                                <div className="text-start pe-3 text-nowrap fw-bold" style={{ width: "130px" }}>Segunda-feira</div>
-                                <div className="me-1 text-nowrap">Início:</div>
-                                <TimeInput value={this.state.horarios[1].horarioInicio} disabled={!this.getStatus(1)}
-                                    onChange={(e) => this.handleChangeHorario(e, 1, "horarioInicio")} />
-                                <div className="ms-3 me-1 text-nowrap">Fim:</div>
-                                <TimeInput value={this.state.horarios[1].horarioFim} disabled={!this.getStatus(1)}
-                                    onChange={(e) => this.handleChangeHorario(e, 1, "horarioFim")} />
+                            
+                            <div className="d-flex justify-content-center gap-3 mt-4">
+                                <button className="btn btn-primary btn-lg" 
+                                        onClick={this.save}
+                                        style={{
+                                            padding: 'var(--spacing-md) var(--spacing-xl)',
+                                            fontSize: 'var(--font-size-lg)',
+                                            fontWeight: 'var(--font-weight-semibold)',
+                                            borderRadius: 'var(--radius-lg)',
+                                            minWidth: '200px'
+                                        }}>
+                                    <i className="fas fa-save me-2"></i>
+                                    Salvar Horários
+                                </button>
+                                
+                                <button className="btn btn-outline-secondary btn-lg" 
+                                        onClick={() => {
+                                            console.log('Estado atual:', this.state)
+                                            console.log('Horários:', this.state.horarios)
+                                        }}
+                                        style={{
+                                            padding: 'var(--spacing-md) var(--spacing-xl)',
+                                            fontSize: 'var(--font-size-lg)',
+                                            fontWeight: 'var(--font-weight-semibold)',
+                                            borderRadius: 'var(--radius-lg)',
+                                            minWidth: '200px'
+                                        }}>
+                                    <i className="fas fa-bug me-2"></i>
+                                    Debug Estado
+                                </button>
+                                
+                                <button className="btn btn-outline-info btn-lg" 
+                                        onClick={() => {
+                                            console.log('Recarregando horários...')
+                                            this.load()
+                                        }}
+                                        style={{
+                                            padding: 'var(--spacing-md) var(--spacing-xl)',
+                                            fontSize: 'var(--font-size-lg)',
+                                            fontWeight: 'var(--font-weight-semibold)',
+                                            borderRadius: 'var(--radius-lg)',
+                                            minWidth: '200px'
+                                        }}>
+                                    <i className="fas fa-sync me-2"></i>
+                                    Recarregar
+                                </button>
                             </div>
-                            <div className="d-flex align-items-center mb-2">
-                                <div className="form-check form-switch">
-                                    <input className="form-check-input" type="checkbox" id="switch-segunda" checked={this.getStatus(2)} onChange={() => this.handleChangeStatus(2)}/>
-                                </div>
-                                <div className="text-start pe-3 text-nowrap fw-bold" style={{ width: "130px" }}>Terça-feira</div>
-                                <div className="me-1 text-nowrap">Início:</div>
-                                <TimeInput value={this.state.horarios[2].horarioInicio} disabled={!this.getStatus(2)}
-                                    onChange={(e) => this.handleChangeHorario(e, 2, "horarioInicio")} />
-                                <div className="ms-3 me-1 text-nowrap">Fim:</div>
-                                <TimeInput value={this.state.horarios[2].horarioFim} disabled={!this.getStatus(2)}
-                                    onChange={(e) => this.handleChangeHorario(e, 2, "horarioFim")} />
-                            </div>
-                            <div className="d-flex align-items-center mb-2">
-                                <div className="form-check form-switch">
-                                    <input className="form-check-input" type="checkbox" id="switch-segunda" checked={this.getStatus(3)} onChange={() => this.handleChangeStatus(3)}/>
-                                </div>
-                                <div className="text-start pe-3 text-nowrap fw-bold" style={{ width: "130px" }}>Quarta-feira</div>
-                                <div className="me-1 text-nowrap">Início:</div>
-                                <TimeInput value={this.state.horarios[3].horarioInicio} disabled={!this.getStatus(3)}
-                                    onChange={(e) => this.handleChangeHorario(e, 3, "horarioInicio")} />
-                                <div className="ms-3 me-1 text-nowrap">Fim:</div>
-                                <TimeInput value={this.state.horarios[3].horarioFim} disabled={!this.getStatus(3)}
-                                    onChange={(e) => this.handleChangeHorario(e, 3, "horarioFim")} />
-                            </div>
-                            <div className="d-flex align-items-center mb-2">
-                                <div className="form-check form-switch">
-                                    <input className="form-check-input" type="checkbox" id="switch-segunda" checked={this.getStatus(4)} onChange={() => this.handleChangeStatus(4)}/>
-                                </div>
-                                <div className="text-start pe-3 text-nowrap fw-bold" style={{ width: "130px" }}>Quinta-feira</div>
-                                <div className="me-1 text-nowrap">Início:</div>
-                                <TimeInput value={this.state.horarios[4].horarioInicio} disabled={!this.getStatus(4)}
-                                    onChange={(e) => this.handleChangeHorario(e, 4, "horarioInicio")} />
-                                <div className="ms-3 me-1 text-nowrap">Fim:</div>
-                                <TimeInput value={this.state.horarios[4].horarioFim} disabled={!this.getStatus(4)}
-                                    onChange={(e) => this.handleChangeHorario(e, 4, "horarioFim")} />
-                            </div>
-                            <div className="d-flex align-items-center mb-2">
-                                <div className="form-check form-switch">
-                                    <input className="form-check-input" type="checkbox" id="switch-segunda" checked={this.getStatus(5)} onChange={() => this.handleChangeStatus(5)}/>
-                                </div>
-                                <div className="text-start pe-3 text-nowrap fw-bold" style={{ width: "130px" }}>Sexta-feira</div>
-                                <div className="me-1 text-nowrap">Início:</div>
-                                <TimeInput value={this.state.horarios[5].horarioInicio} disabled={!this.getStatus(5)}
-                                    onChange={(e) => this.handleChangeHorario(e, 5, "horarioInicio")} />
-                                <div className="ms-3 me-1 text-nowrap">Fim:</div>
-                                <TimeInput value={this.state.horarios[5].horarioFim} disabled={!this.getStatus(5)}
-                                    onChange={(e) => this.handleChangeHorario(e, 5, "horarioFim")} />
-                            </div>
-                            <div className="d-flex align-items-center mb-2">
-                                <div className="form-check form-switch">
-                                    <input className="form-check-input" type="checkbox" id="switch-segunda" checked={this.getStatus(6)} onChange={() => this.handleChangeStatus(6)}/>
-                                </div>
-                                <div className="text-start pe-3 text-nowrap fw-bold" style={{ width: "130px" }}>Sábado</div>
-                                <div className="me-1 text-nowrap">Início:</div>
-                                <TimeInput value={this.state.horarios[6].horarioInicio} disabled={!this.getStatus(6)}
-                                    onChange={(e) => this.handleChangeHorario(e, 6, "horarioInicio")} />
-                                <div className="ms-3 me-1 text-nowrap">Fim:</div>
-                                <TimeInput value={this.state.horarios[6].horarioFim} disabled={!this.getStatus(6)}
-                                    onChange={(e) => this.handleChangeHorario(e, 6, "horarioFim")} />
-                            </div>
-                        </div>
-                        <div className="d-flex justify-content-end mt-3">
-                        <button className="btn btn-primary" onClick={this.save}>Salvar</button>
                         </div>
                     </div>
                 </div>

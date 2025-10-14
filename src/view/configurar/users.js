@@ -44,24 +44,33 @@ class Users extends React.Component {
     }
 
     handleNewUser = async () => {
-        const data = {
-            status: this.state.newUserStatus,
-            isProvider: this.state.newUserIsProvider,
-            nome: this.state.newUserNome,
-            celular: this.state.newUserCelular,
-            email: this.state.newUserEmail,
-            senha: this.state.newUserSenha,
-            services: this.state.newUserServices || [],
-        }
-        if (this.verifyFields(data)) {
-            try {
-                await addUser(data)
+        try {
+            console.log('Iniciando cadastro de usuário...')
+            const data = {
+                status: this.state.newUserStatus,
+                isProvider: this.state.newUserIsProvider,
+                nome: this.state.newUserNome,
+                celular: this.state.newUserCelular,
+                email: this.state.newUserEmail,
+                senha: this.state.newUserSenha,
+                services: this.state.newUserServices || [],
+                establishmentId: this.state.establishment.id
+            }
+            console.log('Dados do usuário:', data)
+            
+            if (this.verifyFields(data)) {
+                console.log('Validação passou, salvando...')
+                const result = await addUser(data)
+                console.log('Resultado do salvamento:', result)
                 alert("Usuário cadastrado com sucesso!")
                 this.load()
                 this.cleanFields()
-            } catch (error) {
-                console.error("Erro ao cadastrar serviço:", error.message)
+            } else {
+                console.log('Validação falhou')
             }
+        } catch (error) {
+            console.error("Erro ao cadastrar usuário:", error)
+            alert("Erro ao cadastrar usuário: " + error.message)
         }
     }
 

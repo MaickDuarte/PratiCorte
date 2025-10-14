@@ -27,34 +27,146 @@ class Login extends React.Component {
         return (
             <> 
                 {
-                    <div className="container d-flex flex-column justify-content-center align-items-center">
-                        <div className="card p-4 shadow-lg bg-light rounded">
-                            <div className="mb-2">
-                                <img src="" alt="" />
-                                <h1 className="mb-2">Acesse sua conta!</h1>
-                                <h5>PratiCorte - Gestão rapida e fácil da sua barbearia.</h5>
-                            </div>
-                            <form>
-                                <div className="mb-3">
-                                    <label className="form-label" htmlFor="email">E-mail</label>
-                                    <input className="form-control" type="text" name="email" id="email" placeholder="exemplo@gmail.com"
-                                    onChange={(e) => this.setState({ email: e.target.value })}/>
+                    <div className="container d-flex flex-column justify-content-center align-items-center min-vh-100">
+                        <div className="card shadow-lg border-0" style={{ 
+                            borderRadius: 'var(--radius-xl)', 
+                            maxWidth: '400px', 
+                            width: '100%',
+                            background: 'var(--bg-primary)'
+                        }}>
+                            <div className="card-body p-5">
+                                <div className="text-center mb-4">
+                                    <div style={{
+                                        width: '64px',
+                                        height: '64px',
+                                        background: 'linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%)',
+                                        borderRadius: 'var(--radius-lg)',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        margin: '0 auto var(--spacing-lg)',
+                                        color: 'white',
+                                        fontSize: 'var(--font-size-2xl)',
+                                        fontWeight: 'var(--font-weight-bold)'
+                                    }}>
+                                        P
+                                    </div>
+                                    <h1 style={{ 
+                                        fontSize: 'var(--font-size-3xl)', 
+                                        fontWeight: 'var(--font-weight-bold)', 
+                                        color: 'var(--text-primary)',
+                                        marginBottom: 'var(--spacing-sm)'
+                                    }}>
+                                        Bem-vindo de volta!
+                                    </h1>
+                                    <p style={{ 
+                                        color: 'var(--text-secondary)', 
+                                        fontSize: 'var(--font-size-base)',
+                                        marginBottom: 'var(--spacing-xl)'
+                                    }}>
+                                        PratiCorte - Gestão rápida e fácil da sua barbearia
+                                    </p>
                                 </div>
-                                <div>
-                                    <label className="form-label" htmlFor="password">Senha</label>
-                                    <input className="form-control" type="password" name="password" id="password" placeholder="***********"
-                                    onChange={(e) => this.setState({ password: e.target.value })}/>
+                                
+                                <form>
+                                    <div className="mb-4">
+                                        <label className="form-label" htmlFor="email" style={{ 
+                                            fontWeight: 'var(--font-weight-medium)',
+                                            color: 'var(--text-primary)',
+                                            marginBottom: 'var(--spacing-sm)'
+                                        }}>
+                                            E-mail
+                                        </label>
+                                        <div style={{ position: 'relative' }}>
+                                            <i className="fas fa-envelope" style={{
+                                                position: 'absolute',
+                                                left: 'var(--spacing-md)',
+                                                top: '50%',
+                                                transform: 'translateY(-50%)',
+                                                color: 'var(--text-tertiary)',
+                                                zIndex: 1
+                                            }}></i>
+                                            <input className="form-control" 
+                                                   type="email" 
+                                                   name="email" 
+                                                   id="email" 
+                                                   placeholder="exemplo@gmail.com"
+                                                   style={{ paddingLeft: '2.5rem' }}
+                                                   onChange={(e) => this.setState({ email: e.target.value })}/>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="mb-4">
+                                        <label className="form-label" htmlFor="password" style={{ 
+                                            fontWeight: 'var(--font-weight-medium)',
+                                            color: 'var(--text-primary)',
+                                            marginBottom: 'var(--spacing-sm)'
+                                        }}>
+                                            Senha
+                                        </label>
+                                        <div style={{ position: 'relative' }}>
+                                            <i className="fas fa-lock" style={{
+                                                position: 'absolute',
+                                                left: 'var(--spacing-md)',
+                                                top: '50%',
+                                                transform: 'translateY(-50%)',
+                                                color: 'var(--text-tertiary)',
+                                                zIndex: 1
+                                            }}></i>
+                                            <input className="form-control" 
+                                                   type="password" 
+                                                   name="password" 
+                                                   id="password" 
+                                                   placeholder="••••••••"
+                                                   style={{ paddingLeft: '2.5rem' }}
+                                                   onChange={(e) => this.setState({ password: e.target.value })}/>
+                                        </div>
+                                    </div>
+                                </form>
+                                
+                                <div className="text-center mb-4">
+                                    <Link to="/" style={{ 
+                                        color: 'var(--primary-color)', 
+                                        textDecoration: 'none',
+                                        fontSize: 'var(--font-size-sm)',
+                                        fontWeight: 'var(--font-weight-medium)'
+                                    }}>
+                                        Esqueceu sua senha?
+                                    </Link>
                                 </div>
-                            </form>
-                            <Link to="/" className="d-block mb-3 text-decoration-none text-center">Esqueceu sua senha?</Link>
-                            <button className="btn btn-primary mb-3" onClick={() => handleLogin(this.state.email, this.state.password, (isLoading) => this.setState({ isLoading }))}>
-                                Fazer Login
-                            </button>
-                            <div className="text-center">
-                                <span className="d-block mb-2">Ainda não é cliente?</span>
-                                <Link to="/criar-conta">
-                                    <button className="btn btn-outline-secondary">Crie sua conta!</button>
-                                </Link>
+                                
+                                <button className="btn btn-primary w-100 mb-4" 
+                                        style={{ 
+                                            padding: 'var(--spacing-md)',
+                                            fontSize: 'var(--font-size-base)',
+                                            fontWeight: 'var(--font-weight-semibold)',
+                                            borderRadius: 'var(--radius-md)'
+                                        }}
+                                        onClick={() => handleLogin(this.state.email, this.state.password, (isLoading) => this.setState({ isLoading }))}>
+                                    <i className="fas fa-sign-in-alt me-2"></i>
+                                    Entrar
+                                </button>
+                                
+                                <div className="text-center">
+                                    <p style={{ 
+                                        color: 'var(--text-secondary)', 
+                                        fontSize: 'var(--font-size-sm)',
+                                        marginBottom: 'var(--spacing-md)'
+                                    }}>
+                                        Ainda não é cliente?
+                                    </p>
+                                    <Link to="/criar-conta">
+                                        <button className="btn btn-outline-primary w-100" style={{
+                                            padding: 'var(--spacing-md)',
+                                            fontSize: 'var(--font-size-base)',
+                                            fontWeight: 'var(--font-weight-semibold)',
+                                            borderRadius: 'var(--radius-md)'
+                                        }}>
+                                            <i className="fas fa-user-plus me-2"></i>
+                                            Criar conta
+                                        </button>
+                                    </Link>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -154,53 +266,244 @@ class Register extends React.Component {
     render() {
         return (
             <>
-                <div className="container d-flex flex-column justify-content-center align-items-center">
-                    <div className="card p-4 shadow-lg bg-white rounded">
-                        <div className="mb-2">
-                            <img src="" alt="" />
-                            <h1 className="mb-2">Crie sua conta!</h1>
-                            <h5>PratiCorte - Gestão rapida e fácil da sua barbearia.</h5>
-                        </div>
-                        <form>
-                            <div className="mb-3">
-                                <label className="form-label" htmlFor="email">E-mail</label>
-                                <input className="form-control" type="text" name="email" id="email" placeholder="exemplo@gmail.com"
-                                onChange={(e) => this.setState({ email: e.target.value })}/>
+                <div className="container d-flex flex-column justify-content-center align-items-center min-vh-100">
+                    <div className="card shadow-lg border-0" style={{ 
+                        borderRadius: 'var(--radius-xl)', 
+                        maxWidth: '500px', 
+                        width: '100%',
+                        background: 'var(--bg-primary)'
+                    }}>
+                        <div className="card-body p-5">
+                            <div className="text-center mb-4">
+                                <div style={{
+                                    width: '64px',
+                                    height: '64px',
+                                    background: 'linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%)',
+                                    borderRadius: 'var(--radius-lg)',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    margin: '0 auto var(--spacing-lg)',
+                                    color: 'white',
+                                    fontSize: 'var(--font-size-2xl)',
+                                    fontWeight: 'var(--font-weight-bold)'
+                                }}>
+                                    P
+                                </div>
+                                <h1 style={{ 
+                                    fontSize: 'var(--font-size-3xl)', 
+                                    fontWeight: 'var(--font-weight-bold)', 
+                                    color: 'var(--text-primary)',
+                                    marginBottom: 'var(--spacing-sm)'
+                                }}>
+                                    Crie sua conta!
+                                </h1>
+                                <p style={{ 
+                                    color: 'var(--text-secondary)', 
+                                    fontSize: 'var(--font-size-base)',
+                                    marginBottom: 'var(--spacing-xl)'
+                                }}>
+                                    PratiCorte - Gestão rápida e fácil da sua barbearia
+                                </p>
                             </div>
-                            <div className="mb-3">
-                                <label className="form-label" htmlFor="name">Nome do responsável</label>
-                                <input className="form-control" type="text" name="name" id="name" placeholder="Nome do responsável"
-                                onChange={(e) => this.setState({ name: e.target.value })}/>
+                            
+                            <form>
+                                <div className="row">
+                                    <div className="col-md-6 mb-3">
+                                        <label className="form-label" htmlFor="email" style={{ 
+                                            fontWeight: 'var(--font-weight-medium)',
+                                            color: 'var(--text-primary)',
+                                            marginBottom: 'var(--spacing-sm)'
+                                        }}>
+                                            E-mail
+                                        </label>
+                                        <div style={{ position: 'relative' }}>
+                                            <i className="fas fa-envelope" style={{
+                                                position: 'absolute',
+                                                left: 'var(--spacing-md)',
+                                                top: '50%',
+                                                transform: 'translateY(-50%)',
+                                                color: 'var(--text-tertiary)',
+                                                zIndex: 1
+                                            }}></i>
+                                            <input className="form-control" 
+                                                   type="email" 
+                                                   name="email" 
+                                                   id="email" 
+                                                   placeholder="exemplo@gmail.com"
+                                                   style={{ paddingLeft: '2.5rem' }}
+                                                   onChange={(e) => this.setState({ email: e.target.value })}/>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="col-md-6 mb-3">
+                                        <label className="form-label" htmlFor="name" style={{ 
+                                            fontWeight: 'var(--font-weight-medium)',
+                                            color: 'var(--text-primary)',
+                                            marginBottom: 'var(--spacing-sm)'
+                                        }}>
+                                            Nome do responsável
+                                        </label>
+                                        <div style={{ position: 'relative' }}>
+                                            <i className="fas fa-user" style={{
+                                                position: 'absolute',
+                                                left: 'var(--spacing-md)',
+                                                top: '50%',
+                                                transform: 'translateY(-50%)',
+                                                color: 'var(--text-tertiary)',
+                                                zIndex: 1
+                                            }}></i>
+                                            <input className="form-control" 
+                                                   type="text" 
+                                                   name="name" 
+                                                   id="name" 
+                                                   placeholder="Seu nome completo"
+                                                   style={{ paddingLeft: '2.5rem' }}
+                                                   onChange={(e) => this.setState({ name: e.target.value })}/>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div className="mb-3">
+                                    <label className="form-label" htmlFor="password" style={{ 
+                                        fontWeight: 'var(--font-weight-medium)',
+                                        color: 'var(--text-primary)',
+                                        marginBottom: 'var(--spacing-sm)'
+                                    }}>
+                                        Senha
+                                    </label>
+                                    <div style={{ position: 'relative' }}>
+                                        <i className="fas fa-lock" style={{
+                                            position: 'absolute',
+                                            left: 'var(--spacing-md)',
+                                            top: '50%',
+                                            transform: 'translateY(-50%)',
+                                            color: 'var(--text-tertiary)',
+                                            zIndex: 1
+                                        }}></i>
+                                        <input className="form-control" 
+                                               type="password" 
+                                               name="password" 
+                                               id="password" 
+                                               placeholder="••••••••"
+                                               style={{ paddingLeft: '2.5rem' }}
+                                               onChange={(e) => this.setState({ password: e.target.value })}/>
+                                    </div>
+                                </div>
+                                
+                                <div className="mb-3">
+                                    <label className="form-label" htmlFor="document" style={{ 
+                                        fontWeight: 'var(--font-weight-medium)',
+                                        color: 'var(--text-primary)',
+                                        marginBottom: 'var(--spacing-sm)'
+                                    }}>
+                                        <Link to="https://www.4devs.com.br/gerador_de_cpf" target="_blank" style={{ 
+                                            color: 'var(--primary-color)', 
+                                            textDecoration: 'none' 
+                                        }}>
+                                            Documento (CPF ou CNPJ)
+                                        </Link>
+                                    </label>
+                                    <div style={{ position: 'relative' }}>
+                                        <i className="fas fa-id-card" style={{
+                                            position: 'absolute',
+                                            left: 'var(--spacing-md)',
+                                            top: '50%',
+                                            transform: 'translateY(-50%)',
+                                            color: 'var(--text-tertiary)',
+                                            zIndex: 1
+                                        }}></i>
+                                        <input className="form-control" 
+                                               type="text" 
+                                               name="document" 
+                                               id="document" 
+                                               placeholder="000.000.000-00"
+                                               style={{ paddingLeft: '2.5rem' }}
+                                               onChange={(e) => this.setState({ document: e.target.value })}/>
+                                    </div>
+                                </div>
+                                
+                                <div className="mb-3">
+                                    <label className="form-label" htmlFor="phoneNumber" style={{ 
+                                        fontWeight: 'var(--font-weight-medium)',
+                                        color: 'var(--text-primary)',
+                                        marginBottom: 'var(--spacing-sm)'
+                                    }}>
+                                        Celular
+                                    </label>
+                                    <PhoneNumberInput value={this.state.phoneNumber} onChange={(e) => this.setState({ phoneNumber: e.target.value })} />
+                                </div>
+                                
+                                <div className="mb-4">
+                                    <label className="form-label" htmlFor="establishment" style={{ 
+                                        fontWeight: 'var(--font-weight-medium)',
+                                        color: 'var(--text-primary)',
+                                        marginBottom: 'var(--spacing-sm)'
+                                    }}>
+                                        Nome do Estabelecimento
+                                    </label>
+                                    <div style={{ position: 'relative' }}>
+                                        <i className="fas fa-building" style={{
+                                            position: 'absolute',
+                                            left: 'var(--spacing-md)',
+                                            top: '50%',
+                                            transform: 'translateY(-50%)',
+                                            color: 'var(--text-tertiary)',
+                                            zIndex: 1
+                                        }}></i>
+                                        <input className="form-control" 
+                                               type="text" 
+                                               name="establishment" 
+                                               id="establishment" 
+                                               placeholder="Barbearia PratiCorte"
+                                               style={{ paddingLeft: '2.5rem' }}
+                                               onChange={(e) => this.setState({ establishment: e.target.value })} />
+                                    </div>
+                                </div>
+                            </form>
+                            
+                            <div className="text-center mb-4">
+                                <Link to="/termos-de-uso" target="_blank" style={{ 
+                                    color: 'var(--text-secondary)', 
+                                    textDecoration: 'none',
+                                    fontSize: 'var(--font-size-sm)'
+                                }}>
+                                    Ao criar uma conta, você concorda com nossos <strong>termos de uso</strong> e <strong>política de privacidade</strong>.
+                                </Link>
                             </div>
-                            <div className="mb-3">
-                                <label className="form-label" htmlFor="password">Senha</label>
-                                <input className="form-control" type="password" name="password" id="password" placeholder="***********" 
-                                onChange={(e) => this.setState({ password: e.target.value })}/>
+                            
+                            <button className="btn btn-primary w-100 mb-4" 
+                                    style={{ 
+                                        padding: 'var(--spacing-md)',
+                                        fontSize: 'var(--font-size-base)',
+                                        fontWeight: 'var(--font-weight-semibold)',
+                                        borderRadius: 'var(--radius-md)'
+                                    }}
+                                    onClick={this.handleRegister}>
+                                <i className="fas fa-user-plus me-2"></i>
+                                Criar conta
+                            </button>
+                            
+                            <div className="text-center">
+                                <p style={{ 
+                                    color: 'var(--text-secondary)', 
+                                    fontSize: 'var(--font-size-sm)',
+                                    marginBottom: 'var(--spacing-md)'
+                                }}>
+                                    Já é cliente?
+                                </p>
+                                <Link to="/">
+                                    <button className="btn btn-outline-primary w-100" style={{
+                                        padding: 'var(--spacing-md)',
+                                        fontSize: 'var(--font-size-base)',
+                                        fontWeight: 'var(--font-weight-semibold)',
+                                        borderRadius: 'var(--radius-md)'
+                                    }}>
+                                        <i className="fas fa-sign-in-alt me-2"></i>
+                                        Acesse sua conta
+                                    </button>
+                                </Link>
                             </div>
-                            <div className="mb-3">
-                                <label className="form-label" htmlFor="document">
-                                    <Link to="https://www.4devs.com.br/gerador_de_cpf" target="_blank" className="text-body text-decoration-none">Documento (CPF ou CPNJ)</Link>
-                                </label>
-                                <input className="form-control" type="text" name="document" id="document" placeholder="CPF ou CPNJ"
-                                onChange={(e) => this.setState({ document: e.target.value })}/>
-                            </div>
-                            <div className="mb-3">
-                                <label className="form-label" htmlFor="phoneNumber">Celular</label>
-                                <PhoneNumberInput value={this.state.phoneNumber} onChange={(e) => this.setState({ phoneNumber: e.target.value })} />
-                            </div>
-                            <div className="mb-3">
-                                <label className="form-label" htmlFor="establishment">Nome do Estabelecimento</label>
-                                <input className="form-control" type="text" name="establishment" id="establishment" placeholder="Barbearia PratiCorte"
-                                onChange={(e) => this.setState({ establishment: e.target.value })} />
-                            </div>
-                        </form>
-                        <Link to="/termos-de-uso" target="_blank" className="mb-3"><b>termo de uso e política de privacidade.</b></Link>
-                        <button className="btn btn-primary mb-3" onClick={this.handleRegister}>Cadastre-se</button>
-                        <div className="text-center">
-                            <span className="d-block mb-2">Já é cliente?</span>
-                            <Link to="/">
-                                <button className="btn btn-outline-secondary">Acesse sua conta!</button>
-                            </Link>
                         </div>
                     </div>
                 </div>

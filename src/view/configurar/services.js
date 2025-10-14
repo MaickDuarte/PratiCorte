@@ -34,21 +34,31 @@ class Services extends React.Component {
     }
 
     handleNewService = async () => {
-        const data = {
-            status: this.state.newServiceStatus,
-            nome: this.state.newServiceNome,
-            descricao: this.state.newServiceDescricao,
-            preco: this.state.newServicePreco,
-            duracao: saveTime(this.state.newServiceDuracao),
-        }
-        if (this.verifyFields(data)) {
-            try {
-                await addService(data)
+        try {
+            console.log('Iniciando cadastro de serviço...')
+            const data = {
+                status: this.state.newServiceStatus,
+                nome: this.state.newServiceNome,
+                descricao: this.state.newServiceDescricao,
+                preco: this.state.newServicePreco,
+                duracao: saveTime(this.state.newServiceDuracao),
+                establishmentId: this.state.establishment.id
+            }
+            console.log('Dados do serviço:', data)
+            
+            if (this.verifyFields(data)) {
+                console.log('Validação passou, salvando...')
+                const result = await addService(data)
+                console.log('Resultado do salvamento:', result)
+                alert("Serviço cadastrado com sucesso!")
                 this.load()
                 this.cleanFields()
-            } catch (error) {
-                console.error("Erro ao cadastrar serviço:", error.message)
+            } else {
+                console.log('Validação falhou')
             }
+        } catch (error) {
+            console.error("Erro ao cadastrar serviço:", error)
+            alert("Erro ao cadastrar serviço: " + error.message)
         }
     }
 

@@ -63,15 +63,68 @@ class History extends React.Component {
             <>
                 <NavBar />
                 <div className="container-fluid mt-3">
-                    <div className="row">
-                        <div className="col-12 col-md-3 mb-3">
-                            <div className="card p-3 shadow bg-white rounded h-100">
-                                <h5>Filtro de Agendamentos</h5>
-                                <label>Início</label>
-                                <Flatpickr value={this.state.startDate} options={{ dateFormat: "d/m/Y", locale: Portuguese }} onChange={(date) => this.handleDateChange("startDate", date)} className="form-control"/>
-                                <label className="mt-3">Fim</label>
-                                <Flatpickr value={this.state.endDate} options={{ dateFormat: "d/m/Y", locale: Portuguese }} onChange={(date) => this.handleDateChange("endDate", date)} className="form-control"/>
-                                <button className="btn btn-primary mt-3 w-100" onClick={this.applyFilter}>
+                    <div className="row justify-content-center">
+                        <div className="col-12 col-md-6 col-lg-4 mb-3">
+                            <div className="card p-4 shadow-lg border-0" style={{ 
+                                borderRadius: 'var(--radius-xl)', 
+                                background: 'var(--bg-primary)',
+                                maxWidth: '400px'
+                            }}>
+                                <div className="text-center mb-4">
+                                    <h5 style={{ 
+                                        fontSize: 'var(--font-size-xl)', 
+                                        fontWeight: 'var(--font-weight-semibold)',
+                                        color: 'var(--text-primary)',
+                                        margin: 0
+                                    }}>
+                                        <i className="fas fa-filter me-2"></i>
+                                        Filtro de Agendamentos
+                                    </h5>
+                                </div>
+                                
+                                <div className="mb-3">
+                                    <label className="form-label" style={{ 
+                                        fontWeight: 'var(--font-weight-medium)',
+                                        color: 'var(--text-primary)',
+                                        marginBottom: 'var(--spacing-sm)'
+                                    }}>
+                                        Início
+                                    </label>
+                                    <Flatpickr 
+                                        value={this.state.startDate} 
+                                        options={{ dateFormat: "d/m/Y", locale: Portuguese }} 
+                                        onChange={(date) => this.handleDateChange("startDate", date)} 
+                                        className="form-control"
+                                        style={{ paddingLeft: '2.5rem' }}
+                                    />
+                                </div>
+                                
+                                <div className="mb-4">
+                                    <label className="form-label" style={{ 
+                                        fontWeight: 'var(--font-weight-medium)',
+                                        color: 'var(--text-primary)',
+                                        marginBottom: 'var(--spacing-sm)'
+                                    }}>
+                                        Fim
+                                    </label>
+                                    <Flatpickr 
+                                        value={this.state.endDate} 
+                                        options={{ dateFormat: "d/m/Y", locale: Portuguese }} 
+                                        onChange={(date) => this.handleDateChange("endDate", date)} 
+                                        className="form-control"
+                                        style={{ paddingLeft: '2.5rem' }}
+                                    />
+                                </div>
+                                
+                                <button className="btn btn-primary w-100" 
+                                        onClick={this.applyFilter}
+                                        style={{
+                                            padding: 'var(--spacing-md)',
+                                            fontSize: 'var(--font-size-base)',
+                                            fontWeight: 'var(--font-weight-semibold)',
+                                            borderRadius: 'var(--radius-md)'
+                                        }}>
+                                    <i className="fas fa-search me-2"></i>
                                     Filtrar
                                 </button>
                             </div>

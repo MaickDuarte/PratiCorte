@@ -257,16 +257,41 @@ class Appointment extends react.Component {
     render() {
         return (
             <div className={`d-flex justify-content-center py-5 ${this.state.providers.length > 0 ? 'd-block' : 'd-none'}`}>
-                <div className="card p-4 shadow bg-white rounded w-auto">
-                    <h5 className="mb-3 text-center">{this.state.appointmentTitle}</h5>
-                    <h6 className="mb-3 text-center">{this.state.appoitmentSubTitle}</h6>
-                    <div className="d-flex flex-column gap-2" >
+                <div className="card shadow-lg border-0" style={{ 
+                    borderRadius: 'var(--radius-xl)', 
+                    maxWidth: '600px', 
+                    width: '100%',
+                    background: 'var(--bg-primary)'
+                }}>
+                    <div className="card-header" style={{ 
+                        background: 'linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%)',
+                        color: 'var(--text-inverse)',
+                        border: 'none',
+                        borderRadius: 'var(--radius-xl) var(--radius-xl) 0 0'
+                    }}>
+                        <h4 className="mb-2 text-center" style={{ 
+                            fontSize: 'var(--font-size-xl)', 
+                            fontWeight: 'var(--font-weight-bold)',
+                            margin: 0
+                        }}>
+                            {this.state.appointmentTitle}
+                        </h4>
+                        {this.state.appoitmentSubTitle && (
+                            <p className="text-center mb-0" style={{ 
+                                fontSize: 'var(--font-size-sm)',
+                                opacity: 0.9
+                            }}>
+                                {this.state.appoitmentSubTitle}
+                            </p>
+                        )}
+                    </div>
+                    
+                    <div className="card-body p-4">
+                        <div className="d-flex flex-column gap-3">
                         {
                             this.state.isloading && (
-                                <div className="d-flex justify-content-center">
-                                    <div className="spinner-border text-primary" role="status">
-                                        <span className="visually-hidden">Loading...</span>
-                                    </div>
+                                    <div className="d-flex justify-content-center py-4">
+                                        <div className="spinner" style={{ width: '32px', height: '32px' }}></div>
                                 </div>
                             )
                         }
@@ -274,9 +299,49 @@ class Appointment extends react.Component {
                             this.state.appointmentsStep === 1 && !this.state.isloading && this.state.providers.map((provider, index) => {
                                 //Realize um agendamento
                                 return (
-                                    <button key={index} className="btn btn-outline-primary text-start" onClick={() => this.handleSelectedProvider(provider)}>
-                                        <h6 className="mb-1">{provider?.nome}</h6>
-                                        <div> Celular: {!isEmpty(provider?.celular) ? (<PhoneNumberFormat value={provider?.celular} />) : ("Não informado")}</div>
+                                    <button key={index} 
+                                            className="btn btn-outline-primary text-start d-flex align-items-center p-3" 
+                                            onClick={() => this.handleSelectedProvider(provider)}
+                                            style={{
+                                                borderRadius: 'var(--radius-lg)',
+                                                border: '2px solid var(--primary-color)',
+                                                background: 'transparent',
+                                                color: 'var(--primary-color)',
+                                                transition: 'all var(--transition-fast)',
+                                                textAlign: 'left'
+                                            }}>
+                                        <div style={{
+                                            width: '48px',
+                                            height: '48px',
+                                            background: 'var(--primary-color)',
+                                            borderRadius: 'var(--radius-md)',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            marginRight: 'var(--spacing-md)',
+                                            color: 'white',
+                                            fontSize: 'var(--font-size-lg)',
+                                            fontWeight: 'var(--font-weight-bold)'
+                                        }}>
+                                            <i className="fas fa-user"></i>
+                                        </div>
+                                        <div>
+                                            <h6 className="mb-1" style={{ 
+                                                fontSize: 'var(--font-size-lg)', 
+                                                fontWeight: 'var(--font-weight-semibold)',
+                                                margin: 0
+                                            }}>
+                                                {provider?.nome}
+                                            </h6>
+                                            <div style={{ 
+                                                fontSize: 'var(--font-size-sm)', 
+                                                color: 'var(--text-secondary)',
+                                                opacity: 0.8
+                                            }}>
+                                                <i className="fas fa-phone me-1"></i>
+                                                {!isEmpty(provider?.celular) ? (<PhoneNumberFormat value={provider?.celular} />) : ("Não informado")}
+                                            </div>
+                                        </div>
                                     </button>
                                 )
                             })
@@ -286,14 +351,89 @@ class Appointment extends react.Component {
                                 //Selecione uma data
                                 if (day.isDayAllowed === false) {
                                     return (
-                                        <button key={index} className="btn btn-outline-secondary text-start" disabled>
-                                            <h6 className="mb-1">{day.dia} - {dateToString(day.date)}</h6>
+                                        <button key={index} 
+                                                className="btn btn-outline-secondary text-start d-flex align-items-center p-3" 
+                                                disabled
+                                                style={{
+                                                    borderRadius: 'var(--radius-lg)',
+                                                    border: '2px solid var(--neutral-300)',
+                                                    background: 'var(--neutral-100)',
+                                                    color: 'var(--text-tertiary)',
+                                                    opacity: 0.6
+                                                }}>
+                                            <div style={{
+                                                width: '48px',
+                                                height: '48px',
+                                                background: 'var(--neutral-300)',
+                                                borderRadius: 'var(--radius-md)',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                marginRight: 'var(--spacing-md)',
+                                                color: 'var(--text-tertiary)',
+                                                fontSize: 'var(--font-size-lg)'
+                                            }}>
+                                                <i className="fas fa-calendar-times"></i>
+                                            </div>
+                                            <div>
+                                                <h6 className="mb-1" style={{ 
+                                                    fontSize: 'var(--font-size-lg)', 
+                                                    fontWeight: 'var(--font-weight-semibold)',
+                                                    margin: 0
+                                                }}>
+                                                    {day.dia}
+                                                </h6>
+                                                <div style={{ 
+                                                    fontSize: 'var(--font-size-sm)', 
+                                                    color: 'var(--text-tertiary)'
+                                                }}>
+                                                    {dateToString(day.date)}
+                                                </div>
+                                            </div>
                                         </button>
                                     )
                                 }
                                 return (
-                                    <button key={index} className="btn btn-outline-primary text-start" onClick={() => this.handleSelectedDay(day)}>
-                                        <h6 className="mb-1">{day.dia} - {dateToString(day.date)}</h6>
+                                    <button key={index} 
+                                            className="btn btn-outline-primary text-start d-flex align-items-center p-3" 
+                                            onClick={() => this.handleSelectedDay(day)}
+                                            style={{
+                                                borderRadius: 'var(--radius-lg)',
+                                                border: '2px solid var(--primary-color)',
+                                                background: 'transparent',
+                                                color: 'var(--primary-color)',
+                                                transition: 'all var(--transition-fast)',
+                                                textAlign: 'left'
+                                            }}>
+                                        <div style={{
+                                            width: '48px',
+                                            height: '48px',
+                                            background: 'var(--primary-color)',
+                                            borderRadius: 'var(--radius-md)',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            marginRight: 'var(--spacing-md)',
+                                            color: 'white',
+                                            fontSize: 'var(--font-size-lg)'
+                                        }}>
+                                            <i className="fas fa-calendar-check"></i>
+                                        </div>
+                                        <div>
+                                            <h6 className="mb-1" style={{ 
+                                                fontSize: 'var(--font-size-lg)', 
+                                                fontWeight: 'var(--font-weight-semibold)',
+                                                margin: 0
+                                            }}>
+                                                {day.dia}
+                                            </h6>
+                                            <div style={{ 
+                                                fontSize: 'var(--font-size-sm)', 
+                                                color: 'var(--text-secondary)'
+                                            }}>
+                                                {dateToString(day.date)}
+                                            </div>
+                                        </div>
                                     </button>
                                 )
                             })
@@ -301,30 +441,92 @@ class Appointment extends react.Component {
                         {
                             this.state.appointmentsStep === 3 && !this.state.isloading && (this.state.availableHours?.length > 0 ? (
                                 //Selecione um horário
-                                this.state.availableHours.map((hour, index) => {
+                                <div className="row g-2">
+                                    {this.state.availableHours.map((hour, index) => {
                                     if (!hour.available && !hour.isEditing) {
                                         return (
-                                            <button key={index} className="btn btn-outline-secondary text-start" disabled>
-                                                <h6 className="mb-1">{hour.hour}</h6>
+                                                <div key={index} className="col-6 col-md-4">
+                                                    <button className="btn btn-outline-secondary w-100 p-3" disabled
+                                                            style={{
+                                                                borderRadius: 'var(--radius-lg)',
+                                                                border: '2px solid var(--neutral-300)',
+                                                                background: 'var(--neutral-100)',
+                                                                color: 'var(--text-tertiary)',
+                                                                opacity: 0.6
+                                                            }}>
+                                                        <div style={{ 
+                                                            fontSize: 'var(--font-size-lg)', 
+                                                            fontWeight: 'var(--font-weight-semibold)'
+                                                        }}>
+                                                            <i className="fas fa-clock me-2"></i>
+                                                            {hour.hour}
+                                                        </div>
                                             </button>
+                                                </div>
                                         )
-                                    } if (hour.isEditing) {
+                                        } else if (hour.isEditing) {
                                         return (
-                                            <button key={index} className="btn btn-outline-warning text-start" onClick={() => this.handleSelectedHour(hour.hour)}>
-                                                <h6 className="mb-1">{hour.hour}</h6>
+                                                <div key={index} className="col-6 col-md-4">
+                                                    <button className="btn btn-outline-warning w-100 p-3" 
+                                                            onClick={() => this.handleSelectedHour(hour.hour)}
+                                                            style={{
+                                                                borderRadius: 'var(--radius-lg)',
+                                                                border: '2px solid var(--warning-color)',
+                                                                background: 'transparent',
+                                                                color: 'var(--warning-color)',
+                                                                transition: 'all var(--transition-fast)'
+                                                            }}>
+                                                        <div style={{ 
+                                                            fontSize: 'var(--font-size-lg)', 
+                                                            fontWeight: 'var(--font-weight-semibold)'
+                                                        }}>
+                                                            <i className="fas fa-edit me-2"></i>
+                                                            {hour.hour}
+                                                        </div>
                                             </button>
+                                                </div>
                                         )
                                     } else{
+                                            const isSelected = this.state.selectedHour && this.state.selectedHour.includes(hour.hour)
                                         return (
-                                            <button key={index} className="btn btn-outline-primary text-start" onClick={() => this.handleSelectedHour(hour.hour)}>
-                                                <h6 className="mb-1">{hour.hour}</h6>
+                                                <div key={index} className="col-6 col-md-4">
+                                                    <button className={`btn w-100 p-3 ${isSelected ? 'btn-primary' : 'btn-outline-primary'}`}
+                                                            onClick={() => this.handleSelectedHour(hour.hour)}
+                                                            style={{
+                                                                borderRadius: 'var(--radius-lg)',
+                                                                border: isSelected ? 'none' : '2px solid var(--primary-color)',
+                                                                background: isSelected ? 'var(--primary-color)' : 'transparent',
+                                                                color: isSelected ? 'var(--text-inverse)' : 'var(--primary-color)',
+                                                                transition: 'all var(--transition-fast)',
+                                                                transform: isSelected ? 'scale(1.05)' : 'scale(1)',
+                                                                boxShadow: isSelected ? 'var(--shadow-md)' : 'none'
+                                                            }}>
+                                                        <div style={{ 
+                                                            fontSize: 'var(--font-size-lg)', 
+                                                            fontWeight: 'var(--font-weight-semibold)'
+                                                        }}>
+                                                            <i className={`fas ${isSelected ? 'fa-check-circle' : 'fa-clock'} me-2`}></i>
+                                                            {hour.hour}
+                                                        </div>
                                             </button>
-                                        ) 
-                                    }
-                                })
+                                                </div>
+                                            ) 
+                                        }
+                                    })}
+                                </div>
                             ) : (
-                                <div className="alert alert-warning" role="alert">
-                                    "Nenhum horário configurado para este dia da semana."
+                                <div className="alert alert-warning d-flex align-items-center" role="alert" style={{
+                                    borderRadius: 'var(--radius-lg)',
+                                    border: 'none',
+                                    background: 'rgba(245, 158, 11, 0.1)',
+                                    color: 'var(--warning-color)',
+                                    padding: 'var(--spacing-lg)'
+                                }}>
+                                    <i className="fas fa-exclamation-triangle me-3" style={{ fontSize: 'var(--font-size-xl)' }}></i>
+                                    <div>
+                                        <strong>Nenhum horário disponível</strong><br/>
+                                        <small>Nenhum horário configurado para este dia da semana.</small>
+                                    </div>
                                 </div>
                             ))
                         }
@@ -333,61 +535,268 @@ class Appointment extends react.Component {
                                 //Selecione um serviço
                                 this.state.selectedProvider.services.map((service, index) => {
                                     return (
-                                        <button key={index} className="btn btn-outline-primary text-start" onClick={() => this.handleServiceSelected(service)}>
-                                            <h6 className="mb-1">{service.nome} - <PriceFormat value={service.preco}/></h6>
-                                            <div>Duração: {service.duracao}</div>
+                                        <button key={index} 
+                                                className="btn btn-outline-primary text-start d-flex align-items-center p-3" 
+                                                onClick={() => this.handleServiceSelected(service)}
+                                                style={{
+                                                    borderRadius: 'var(--radius-lg)',
+                                                    border: '2px solid var(--primary-color)',
+                                                    background: 'transparent',
+                                                    color: 'var(--primary-color)',
+                                                    transition: 'all var(--transition-fast)',
+                                                    textAlign: 'left'
+                                                }}>
+                                            <div style={{
+                                                width: '48px',
+                                                height: '48px',
+                                                background: 'var(--primary-color)',
+                                                borderRadius: 'var(--radius-md)',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                marginRight: 'var(--spacing-md)',
+                                                color: 'white',
+                                                fontSize: 'var(--font-size-lg)'
+                                            }}>
+                                                <i className="fas fa-cut"></i>
+                                            </div>
+                                            <div>
+                                                <h6 className="mb-1" style={{ 
+                                                    fontSize: 'var(--font-size-lg)', 
+                                                    fontWeight: 'var(--font-weight-semibold)',
+                                                    margin: 0
+                                                }}>
+                                                    {service.nome}
+                                                </h6>
+                                                <div style={{ 
+                                                    fontSize: 'var(--font-size-sm)', 
+                                                    color: 'var(--text-secondary)',
+                                                    marginBottom: 'var(--spacing-xs)'
+                                                }}>
+                                                    <i className="fas fa-dollar-sign me-1"></i>
+                                                    <PriceFormat value={service.preco} />
+                                                </div>
+                                                <div style={{ 
+                                                    fontSize: 'var(--font-size-sm)', 
+                                                    color: 'var(--text-tertiary)'
+                                                }}>
+                                                    <i className="fas fa-clock me-1"></i>
+                                                    Duração: {service.duracao}
+                                                </div>
+                                            </div>
                                         </button>
                                     )
                                 })
                             ) : (
-                                <div className="alert alert-warning" role="alert">
-                                    {this.state.selectedProvider ? "Nenhum serviço disponível para este prestador." : "Selecione um prestador primeiro."}
+                                <div className="alert alert-warning d-flex align-items-center" role="alert" style={{
+                                    borderRadius: 'var(--radius-lg)',
+                                    border: 'none',
+                                    background: 'rgba(245, 158, 11, 0.1)',
+                                    color: 'var(--warning-color)',
+                                    padding: 'var(--spacing-lg)'
+                                }}>
+                                    <i className="fas fa-exclamation-triangle me-3" style={{ fontSize: 'var(--font-size-xl)' }}></i>
+                                    <div>
+                                        <strong>Nenhum serviço disponível</strong><br/>
+                                        <small>{this.state.selectedProvider ? "Nenhum serviço disponível para este prestador." : "Selecione um prestador primeiro."}</small>
+                                    </div>
                                 </div>
                             ))
                         }
                         {
                             this.state.appointmentsStep === 5 && !this.state.isloading &&
                             //Resumo do Agendamento
-                            <>
-                                <div className="card p-3">
-                                    <p><strong>Prestador:</strong> {this.state.selectedProvider?.nome}</p>
-                                    <p><strong>Data:</strong> {this.state.selectedDay ? `${this.state.selectedDay.dia} - ${dateToString(this.state.selectedDay.date)}` : "Não selecionada"}</p>
-                                    <p><strong>Horário:</strong> {hoursArrayToString(this.state.selectedHour)}</p>
-                                    <p><strong>Serviço:</strong> {this.state.selectedService?.nome || "Não selecionado"} - <PriceFormat value={this.state.selectedService?.preco}/></p>
+                            <div>
+                                <div className="card border-0 shadow-sm p-4" style={{ 
+                                    borderRadius: 'var(--radius-lg)',
+                                    background: 'var(--bg-secondary)'
+                                }}>
+                                    <h5 className="mb-3" style={{ 
+                                        fontSize: 'var(--font-size-lg)', 
+                                        fontWeight: 'var(--font-weight-semibold)',
+                                        color: 'var(--text-primary)'
+                                    }}>
+                                        <i className="fas fa-calendar-check me-2" style={{ color: 'var(--primary-color)' }}></i>
+                                        Resumo do Agendamento
+                                    </h5>
+                                    
+                                    <div className="row g-3">
+                                        <div className="col-md-6">
+                                            <div className="d-flex align-items-center mb-2">
+                                                <i className="fas fa-user me-3" style={{ color: 'var(--primary-color)', width: '20px' }}></i>
+                                                <div>
+                                                    <small style={{ color: 'var(--text-tertiary)', fontSize: 'var(--font-size-xs)' }}>Prestador</small>
+                                                    <div style={{ fontWeight: 'var(--font-weight-semibold)' }}>{this.state.selectedProvider?.nome}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div className="col-md-6">
+                                            <div className="d-flex align-items-center mb-2">
+                                                <i className="fas fa-calendar me-3" style={{ color: 'var(--primary-color)', width: '20px' }}></i>
+                                                <div>
+                                                    <small style={{ color: 'var(--text-tertiary)', fontSize: 'var(--font-size-xs)' }}>Data</small>
+                                                    <div style={{ fontWeight: 'var(--font-weight-semibold)' }}>
+                                                        {this.state.selectedDay ? `${this.state.selectedDay.dia} - ${dateToString(this.state.selectedDay.date)}` : "Não selecionada"}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div className="col-md-6">
+                                            <div className="d-flex align-items-center mb-2">
+                                                <i className="fas fa-clock me-3" style={{ color: 'var(--primary-color)', width: '20px' }}></i>
+                                                <div>
+                                                    <small style={{ color: 'var(--text-tertiary)', fontSize: 'var(--font-size-xs)' }}>Horário</small>
+                                                    <div style={{ fontWeight: 'var(--font-weight-semibold)' }}>{hoursArrayToString(this.state.selectedHour)}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div className="col-md-6">
+                                            <div className="d-flex align-items-center mb-2">
+                                                <i className="fas fa-cut me-3" style={{ color: 'var(--primary-color)', width: '20px' }}></i>
+                                                <div>
+                                                    <small style={{ color: 'var(--text-tertiary)', fontSize: 'var(--font-size-xs)' }}>Serviço</small>
+                                                    <div style={{ fontWeight: 'var(--font-weight-semibold)' }}>
+                                                        {this.state.selectedService?.nome || "Não selecionado"} - <PriceFormat value={this.state.selectedService?.preco} />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="card p-3">
-                                    <label>Cliente Nome</label>
-                                    <input type="text" name="nome" id="nome" placeholder="Nome do cliente" className={`form-control`}
-                                        value={this.state.appointmentCliente} onChange={(e) => this.setState({ appointmentCliente: e.target.value })} />
-                                    <label className="form-label" htmlFor="celular">Cliente Celular</label>
-                                        <PhoneNumberInput value={this.state.appointmentCelular} onChange={(e) => this.setState({ appointmentCelular: e.target.value })} />
-                                    <label className="form-label" htmlFor="celular">Observação</label>
-                                    <textarea name="observação" id="observação" placeholder="Observação" className={`form-control`}
-                                        value={this.state.appointmentObservation} onChange={(e) => this.setState({ appointmentObservation: e.target.value })} />
+                                <div className="card border-0 shadow-sm p-4 mt-3" style={{ 
+                                    borderRadius: 'var(--radius-lg)',
+                                    background: 'var(--bg-secondary)'
+                                }}>
+                                    <h5 className="mb-3" style={{ 
+                                        fontSize: 'var(--font-size-lg)', 
+                                        fontWeight: 'var(--font-weight-semibold)',
+                                        color: 'var(--text-primary)'
+                                    }}>
+                                        <i className="fas fa-user me-2" style={{ color: 'var(--primary-color)' }}></i>
+                                        Dados do Cliente
+                                    </h5>
+                                    
+                                    <div className="row g-3">
+                                        <div className="col-md-6">
+                                            <label className="form-label" style={{ 
+                                                fontWeight: 'var(--font-weight-medium)',
+                                                color: 'var(--text-primary)',
+                                                marginBottom: 'var(--spacing-sm)'
+                                            }}>
+                                                Nome do Cliente
+                                            </label>
+                                            <div style={{ position: 'relative' }}>
+                                                <i className="fas fa-user" style={{
+                                                    position: 'absolute',
+                                                    left: 'var(--spacing-md)',
+                                                    top: '50%',
+                                                    transform: 'translateY(-50%)',
+                                                    color: 'var(--text-tertiary)',
+                                                    zIndex: 1
+                                                }}></i>
+                                                <input type="text" 
+                                                       name="nome" 
+                                                       id="nome" 
+                                                       placeholder="Nome completo do cliente" 
+                                                       className="form-control"
+                                                       style={{ paddingLeft: '2.5rem' }}
+                                                       value={this.state.appointmentCliente} 
+                                                       onChange={(e) => this.setState({ appointmentCliente: e.target.value })} />
+                                            </div>
+                                        </div>
+                                        
+                                        <div className="col-md-6">
+                                            <label className="form-label" style={{ 
+                                                fontWeight: 'var(--font-weight-medium)',
+                                                color: 'var(--text-primary)',
+                                                marginBottom: 'var(--spacing-sm)'
+                                            }}>
+                                                Celular
+                                            </label>
+                                            <PhoneNumberInput 
+                                                value={this.state.appointmentCelular} 
+                                                onChange={(e) => this.setState({ appointmentCelular: e.target.value })} 
+                                            />
+                                        </div>
+                                        
+                                        <div className="col-12">
+                                            <label className="form-label" style={{ 
+                                                fontWeight: 'var(--font-weight-medium)',
+                                                color: 'var(--text-primary)',
+                                                marginBottom: 'var(--spacing-sm)'
+                                            }}>
+                                                Observações
+                                            </label>
+                                            <div style={{ position: 'relative' }}>
+                                                <i className="fas fa-comment" style={{
+                                                    position: 'absolute',
+                                                    left: 'var(--spacing-md)',
+                                                    top: 'var(--spacing-md)',
+                                                    color: 'var(--text-tertiary)',
+                                                    zIndex: 1
+                                                }}></i>
+                                                <textarea name="observação" 
+                                                          id="observação" 
+                                                          placeholder="Observações sobre o atendimento (opcional)" 
+                                                          className="form-control"
+                                                          style={{ paddingLeft: '2.5rem', minHeight: '80px' }}
+                                                          value={this.state.appointmentObservation} 
+                                                          onChange={(e) => this.setState({ appointmentObservation: e.target.value })} />
+                                            </div>
+                                        </div>
+                                </div>
                                 </div>
                                 {
                                     this.state.mininumStep === 1 &&
-                                    <button className="btn btn-success" onClick={() => this.finishAppointment()}>
-                                        <h6 className="mb-1">Finalizar</h6>
+                                    <button className="btn btn-success btn-lg w-100" 
+                                            onClick={() => this.finishAppointment()}
+                                            style={{
+                                                padding: 'var(--spacing-lg)',
+                                                fontSize: 'var(--font-size-lg)',
+                                                fontWeight: 'var(--font-weight-semibold)',
+                                                borderRadius: 'var(--radius-lg)'
+                                            }}>
+                                        <i className="fas fa-check-circle me-2"></i>
+                                        Finalizar Agendamento
                                     </button>
                                 }
                                 {
                                     this.state.mininumStep === 2 &&
-                                    <button className="btn btn-primary" onClick={() => this.updateAppointment()}>
-                                        <h6 className="mb-1">Atualizar Agendamento</h6>
+                                    <button className="btn btn-primary btn-lg w-100" 
+                                            onClick={() => this.updateAppointment()}
+                                            style={{
+                                                padding: 'var(--spacing-lg)',
+                                                fontSize: 'var(--font-size-lg)',
+                                                fontWeight: 'var(--font-weight-semibold)',
+                                                borderRadius: 'var(--radius-lg)'
+                                            }}>
+                                        <i className="fas fa-save me-2"></i>
+                                        Atualizar Agendamento
                                     </button>
                                 }
-                            </>
+                            </div>
                         }
                     </div>
                     {
                         this.state.appointmentsStep > this.state.mininumStep  &&
                         <div className="d-flex justify-content-start mt-3">
-                            <button className="btn btn-primary w-auto" onClick={this.handleLastStep}>
+                            <button className="btn btn-outline-secondary" 
+                                    onClick={this.handleLastStep}
+                                    style={{
+                                        padding: 'var(--spacing-md) var(--spacing-lg)',
+                                        fontSize: 'var(--font-size-base)',
+                                        fontWeight: 'var(--font-weight-semibold)',
+                                        borderRadius: 'var(--radius-md)'
+                                    }}>
+                                <i className="fas fa-arrow-left me-2"></i>
                                 Voltar
                             </button>
                         </div>
                     }
+                    </div>
                 </div>
             </div>
         )

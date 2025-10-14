@@ -67,6 +67,10 @@ export const getNext7Days = () => {
 }
 
 export const completeAvailableHours = (horarios) => {
+    if (!horarios || !horarios.horarios) {
+        return []
+    }
+    
     const next7Days = getNext7Days()
     const completed = next7Days.map((day) => {
         const horarioDoDia = horarios.horarios[getDay(day.date)]

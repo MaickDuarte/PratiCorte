@@ -1,4 +1,4 @@
-import { addDoc, getDoc, updateDoc } from "./collectionBaseWorker";
+import { addDoc, getDoc, updateDoc, getAllDocs } from "./collectionBaseWorker";
 import { where } from "firebase/firestore"
 
 export const addOpeningHours = async (data) => {
@@ -10,7 +10,7 @@ export const updateOpeningHours = async (data) => {
 }
 
 export const getOpeningHours = async (id) => {
-    return await getDoc({
+    return await getAllDocs({
          collection: "openingHours" ,
          queries: [
             where("estabelecimentoId", "==", id)

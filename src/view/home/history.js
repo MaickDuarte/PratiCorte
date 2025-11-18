@@ -84,7 +84,7 @@ class History extends React.Component {
 
     showEditingAppointmentModal = async (appointment) => {
         const horarios = this.state.sessao.horarios
-        const completedAvailableHours = completeAvailableHours(horarios)
+        const completedAvailableHours = completeAvailableHours(horarios[0] ?? [])
         const appoitmentData = {
             appointment: appointment,
             horarios: completedAvailableHours,
@@ -274,7 +274,7 @@ class History extends React.Component {
                     }
                     </div>
                 </div>
-                <Dialog onClose={this.hideEditingAppointment} fullWidth={false} maxWidth={false} open={this.state.editingAppointmentModalOpen}>
+                <Dialog onClose={this.hideEditingAppointment} maxWidth="md" fullWidth open={this.state.editingAppointmentModalOpen} >
                     {
                         this.state.editingAppointmentModalOpen && (
                             <div className="container d-flex flex-column align-items-center">

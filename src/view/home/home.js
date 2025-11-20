@@ -1,7 +1,7 @@
 import React from "react";
 import { getSessao, getEstabelecimento } from "../../config/auth";
 import { NavBar } from "../../components/navbar";
-import { getAppointmentsByDate } from "../../store/collections/appointmentWorker";
+import { getAppointmentsByDate, getAppointmentsByDateAPI } from "../../store/collections/appointmentWorker";
 import { getActiveUsersAppointmentAllowed } from '../../store/collections/userWorker';
 import { Appointment } from "./appointment";
 import { History } from "./history";
@@ -30,7 +30,7 @@ class Home extends React.Component {
         try {
             const today = new Date()
             const endDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7)
-            const appointments = await getAppointmentsByDate(this.state.establishment.id, today, endDate)
+            const appointments = await getAppointmentsByDateAPI(this.state.establishment.id, today, endDate)
             const groupedAppointments = groupAgendamentosByDayOfWeek(appointments)
 
             const providers = await getActiveUsersAppointmentAllowed(this.state.establishment.id)

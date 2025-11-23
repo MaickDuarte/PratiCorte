@@ -1,11 +1,9 @@
 import React from "react";
-import { updateAppointment } from "../../store/collections/appointmentWorker";
+import { updateAppointmentAPI } from "../../store/collections/appointmentWorker";
 import { getEstabelecimento, getSessao } from '../../config/auth';
 import { AppointmentCard } from "../../components/AppointmentCard";
 import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
-import { hoursArrayToString, dateToString } from "../../shared/utils";
-import { completeAvailableHours, setAvailableHours } from '../../services/appointment/appointmentService'
+import { completeAvailableHours } from '../../services/appointment/appointmentService'
 import { Appointment } from "./appointment";
 
 class History extends React.Component {
@@ -126,7 +124,7 @@ class History extends React.Component {
             isCanceled: true,
         }
         try {
-            await updateAppointment(data)
+            await updateAppointmentAPI(data)
             this.reload()
         } catch (error) {
             console.error("Erro ao realizar agendamento:", error.message)

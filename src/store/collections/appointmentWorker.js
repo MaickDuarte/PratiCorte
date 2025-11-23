@@ -8,16 +8,11 @@ export const addAppointmentAPI = async (data) => {
     })
 }
 
-export const updateAppointment = async (data) => {
-    return await updateDoc({ collection: "agendamentos", data: data })
-}
-
-export const getAppointment = async (id) => {
-    return await getDoc({
-         collection: "agendamentos" ,
-         queries: [
-            where("estabelecimentoId", "==", id)
-        ]
+export const updateAppointmentAPI = async (data) => {
+    return await apiRequest({
+        method: "POST",
+        route: "appointments/updateAppointment",
+        body: data
     })
 }
 

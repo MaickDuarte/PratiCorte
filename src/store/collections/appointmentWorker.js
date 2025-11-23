@@ -23,9 +23,9 @@ export const getAppointment = async (id) => {
 export const getAppointmentByProviderAndDateAPI = async (providerId, startDate, endDate) => {
     console.log('API - getAppointmentByProviderAndDateAPI')
     return await apiRequest({
-        method: "get",
+        method: "POST",
         route: "appointments/getAppointmentByProviderAndDate",
-        params: {
+        body: {
             providerId,
             startDate,
             endDate
@@ -35,9 +35,9 @@ export const getAppointmentByProviderAndDateAPI = async (providerId, startDate, 
 
 export const getAppointmentsByDateAPI = async (establishmentId, startDate, endDate) => {
     return await apiRequest({
-        method: "get",
+        method: "POST",
         route: "appointments/getAppointmentsByDate",
-        params: {
+        body: {
             establishmentId,
             startDate,
             endDate

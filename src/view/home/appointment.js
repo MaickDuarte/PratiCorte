@@ -2,7 +2,7 @@ import react from 'react';
 import { getEstabelecimento, getSessao } from '../../config/auth';
 import { isEmpty, PhoneNumberFormat, dateToString, PriceFormat, PhoneNumberInput, removeSimbols, hoursArrayToString } from '../../shared/utils';
 import { setAvailableHours } from '../../services/appointment/appointmentService';
-import { addAppointment, updateAppointment } from '../../store/collections/appointmentWorker';
+import { addAppointmentAPI, updateAppointmentAPI } from '../../store/collections/appointmentWorker';
 import { hourStillAvailable, verifyServiceTimeInBlocks } from '../../services/appointment/appointmentService';
 
 class Appointment extends react.Component {
@@ -173,7 +173,7 @@ class Appointment extends react.Component {
             },
             service: this.state.selectedService,
             establishment: this.state.establishment,
-            establishmentId: this.state.establishment.id,
+            estabelecimentoId: this.state.establishment.id,
             cliente: {
                 nome: this.state.appointmentCliente ?? "",
                 celular: removeSimbols(this.state.appointmentCelular) ?? "",
@@ -188,7 +188,7 @@ class Appointment extends react.Component {
         }
         if (this.verifyFields(data) && this.verifyAppointmentStillAvailable) {
             try {
-                await addAppointment(data)
+                await addAppointmentAPI(data)
                 alert("Agendamento feito com sucesso!")
                 this.cleanFields()
             } catch (error) {
@@ -230,7 +230,7 @@ class Appointment extends react.Component {
         }
         if (this.verifyFields(data) && this.verifyAppointmentStillAvailable) {
             try {
-                await updateAppointment(data)
+                await updateAppointmentAPI(data)
                 alert("Agendamento atualizado com sucesso!")
                 this.cleanFields()
             } catch (error) {

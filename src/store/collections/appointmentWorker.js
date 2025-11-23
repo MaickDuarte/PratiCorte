@@ -1,10 +1,11 @@
-import { addDoc, getDoc, updateDoc, getAllDocs } from "./collectionBaseWorker";
-import { startOfDay, endOfDay } from 'date-fns';
-import { where } from "firebase/firestore"
 import { apiRequest } from "../../config/api";
 
-export const addAppointment = async (data) => {
-    return await addDoc({ collection: "agendamentos", data: data })
+export const addAppointmentAPI = async (data) => {
+    return await apiRequest({
+        method: "POST",
+        route: "appointments/addAppointment",
+        body: data
+    })
 }
 
 export const updateAppointment = async (data) => {
@@ -21,7 +22,6 @@ export const getAppointment = async (id) => {
 }
 
 export const getAppointmentByProviderAndDateAPI = async (providerId, startDate, endDate) => {
-    console.log('API - getAppointmentByProviderAndDateAPI')
     return await apiRequest({
         method: "POST",
         route: "appointments/getAppointmentByProviderAndDate",

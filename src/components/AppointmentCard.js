@@ -1,7 +1,7 @@
 import React from 'react';
 import { secondsToDateString, hoursArrayToString } from "../shared/utils";
 import { isPastDateTime } from "../services/appointment/appointmentService";
-import { updateAppointment } from "../store/collections/appointmentWorker";
+import { updateAppointmentAPI } from "../store/collections/appointmentWorker";
 import { getSessao } from '../config/auth';
 
 class AppointmentCard extends React.Component {
@@ -49,7 +49,7 @@ class AppointmentCard extends React.Component {
             isFinished: true,
         }
         try {
-            await updateAppointment(data)
+            await updateAppointmentAPI(data)
             this.setState({ status: "Finalizado", statusColor: "text-bg-success" })
         } catch (error) {
             console.error("Erro ao realizar agendamento:", error.message)
@@ -65,7 +65,7 @@ class AppointmentCard extends React.Component {
             <div className={`card ${this.state.statusColor} mb-2`}>
                 <div className="card-header">
                     <strong>Status:</strong> {this.state.status}<br />
-                    <strong>Data:</strong> {secondsToDateString(this.state.appointment.dateInfo?.date.seconds)}<br />
+                    <strong>Data:</strong> {secondsToDateString(this.state.appointment.dateInfo?.date._seconds)}<br />
                     <strong>Horário:</strong> {hoursArrayToString(this.state.appointment.dateInfo?.hour)}
                     </div>
                         <div className="card-body d-flex justify-content-between align-items-center">

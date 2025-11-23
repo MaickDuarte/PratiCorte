@@ -1,5 +1,7 @@
-const API_BASE_URL = "https://praticorte.uc.r.appspot.com"; // ajuste se necessário
+import { getUsuario, getEstabelecimento } from '../config/auth';
 
+const API_BASE_URL = "https://praticorte.uc.r.appspot.com"; // ajuste se necessário
+//const API_BASE_URL = "http://localhost:8080"; // ajuste se necessário
 export async function apiRequest({ method = "GET", route, params, body }) {
     let url = `${API_BASE_URL}/${route}`;
 
@@ -18,6 +20,9 @@ export async function apiRequest({ method = "GET", route, params, body }) {
 
     // Body (POST/PUT/PATCH/DELETE)
     if (body) {
+        const establishment = getEstabelecimento()
+        body.estabelecimentoId = establishment.id
+        body.updatedBy = getUsuario()
         options.body = JSON.stringify(body);
     }
 

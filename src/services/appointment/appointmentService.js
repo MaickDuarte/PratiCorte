@@ -1,4 +1,4 @@
-import { getAppointmentByProviderAndDate } from '../../store/collections/appointmentWorker';
+import { getAppointmentByProviderAndDateAPI } from '../../store/collections/appointmentWorker';
 import { isEmpty, convertTimeToMinutes, secondsToDate } from '../../shared/utils';
 import { getDay } from "date-fns";
 
@@ -137,7 +137,7 @@ export const setAvailableHours = async (providersIds, day, originalHourSelected 
     } else {
         date = date.date
     }
-    const appointmentsByProviderAndDate = await getAppointmentByProviderAndDate([providersIds], date, date)
+    const appointmentsByProviderAndDate = await getAppointmentByProviderAndDateAPI(providersIds, date, date)
     const bookedHours = appointmentsByProviderAndDate.map(a => a.dateInfo.hour).flat()
     const now = new Date()
     const isToday = date.toDateString() === now.toDateString()

@@ -20,25 +20,16 @@ export const getAppointment = async (id) => {
     })
 }
 
-export const getAppointmentByProviderAndDate = async (providersIds, startDate, endDate) => {
-    return await getAllDocs({
-        collection: "agendamentos",
-        queries: [
-            where("provider.id", "in", providersIds),
-            where("dateInfo.date", ">=", startOfDay(startDate)),
-            where("dateInfo.date", "<=", endOfDay(endDate))
-        ]
-    })
-}
-
-export const getAppointmentsByDate = async (establishmentId, startDate, endDate) => {
-    return await getAllDocs({
-        collection: "agendamentos",
-        queries: [
-            where("estabelecimentoId", "==", establishmentId),
-            where("dateInfo.date", ">=", startOfDay(startDate)),
-            where("dateInfo.date", "<=", endOfDay(endDate))
-        ]
+export const getAppointmentByProviderAndDateAPI = async (providerId, startDate, endDate) => {
+    console.log('API - getAppointmentByProviderAndDateAPI')
+    return await apiRequest({
+        method: "get",
+        route: "appointments/getAppointmentByProviderAndDate",
+        params: {
+            providerId,
+            startDate,
+            endDate
+        }
     })
 }
 

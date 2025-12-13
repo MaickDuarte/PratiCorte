@@ -29,7 +29,8 @@ class Appointment extends react.Component {
             appointmentCliente:  props.appoitmentData?.appointment?.cliente?.nome || "",
             appointmentCelular: props.appoitmentData?.appointment?.cliente?.celular || "",
             appointmentObservation: props.appoitmentData?.appointment?.cliente?.observacao || "",
-            appointmentTitle: 'Realize um agendamento'
+            appointmentTitle: 'Realize um agendamento',
+            isPublic: props.isPublic || false,
         }
     }
 
@@ -188,12 +189,19 @@ class Appointment extends react.Component {
         if (this.verifyFields(data) && this.verifyAppointmentStillAvailable) {
             try {
                 await addAppointmentAPI(data)
-                alert("Agendamento feito com sucesso!")
                 this.cleanFields()
                 this.props.reload(data)
-                this.setState({ appointmentsStep: 1, selectedProvider: null }, () => {
-                    this.handleStepTitle()
-                })
+                if (this.state.isPublic) {
+                    this.props.finishPublicAppointment({
+                        cliente: data.cliente,
+                        dateInfo: data.dateInfo,
+                        service: data.service
+                    })
+                } else {
+                    this.setState({ appointmentsStep: 1, selectedProvider: null }, () => {
+                        this.handleStepTitle()
+                    })
+                }
             } catch (error) {
                 alert("Erro ao realizar agendamento")
                 console.error("Erro ao realizar agendamento:", error.message)

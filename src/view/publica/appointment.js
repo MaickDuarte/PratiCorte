@@ -7,7 +7,7 @@ import { getActiveUsersAppointmentAllowed } from "../../store/collections/userWo
 import { groupAgendamentosByDayOfWeek, completeAvailableHours } from "../../services/appointment/appointmentService"
 import { getEstablishmentById } from "../../store/collections/establishmentWorker"
 import { PhoneNumberFormat, DocumentFormat, isEmpty } from "../../shared/utils"
-import { getOpeningHours } from "../../store/collections/openingHoursWorker";
+import { getOpeningHours } from "../../store/collections/openingHoursWorker"
 
 export const ClientAppointment = () => {
   const { id } = useParams()
@@ -21,31 +21,25 @@ class ClientAppointmentClass extends React.Component {
     this.state = {
       establishment: null,
       appointments: [],
-      appoitmentData: {
-        horarios: [],
-        providers: [],
-        appointmentTitle: "Realize um agendamento",
-      },
+      appoitmentData: { horarios: [], providers: [], appointmentTitle: "Realize um agendamento" },
       showAppointmentModal: false,
+      showSuccessModal: false,
+      successData: null,
       loading: true,
     }
   }
 
-  async componentDidMount() {
-    this.load()
-  }
+  async componentDidMount() { this.load() }
 
   load = async () => {
     try {
       const establishment = await getEstablishmentById(this.props.estabelecimentoId)
       this.setState({ establishment })
-
       const today = new Date()
       const endDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7)
       const appointments = await getAppointmentsByDateAPI(establishment.id, today, endDate)
       const groupedAppointments = groupAgendamentosByDayOfWeek(appointments)
       this.setState({ appointments: groupedAppointments })
-      
       const providers = await getActiveUsersAppointmentAllowed(establishment.id)
       const horarios = await getOpeningHours(establishment.id)
       const completedAvailableHours = completeAvailableHours(horarios[0] ?? [])
@@ -58,9 +52,16 @@ class ClientAppointmentClass extends React.Component {
         loading: false,
       })
     } catch (error) {
-      console.error("Erro ao carregar dados públicos:", error)
       this.setState({ loading: false })
     }
+  }
+
+  finishPublicAppointment = (data) => {
+    this.setState({ showAppointmentModal: false, showSuccessModal: true, successData: data })
+  }
+
+  closeFinishedModal = () => {
+    this.setState({ showSuccessModal: false })
   }
 
   render() {
@@ -78,9 +79,8 @@ class ClientAppointmentClass extends React.Component {
                   <i className="fas fa-bars"></i>
                 </button>
 
-                <ul
-                  className="dropdown-menu dropdown-menu-end shadow-lg border-0"
-                  style={{ borderRadius: "var(--radius-lg)", border: "1px solid var(--neutral-200)", minWidth: "220px" }} >
+                <ul className="dropdown-menu dropdown-menu-end shadow-lg border-0"
+                    style={{ borderRadius: "var(--radius-lg)", border: "1px solid var(--neutral-200)", minWidth: "220px" }} >
                   <li>
                     <button className="dropdown-item d-flex align-items-center py-2" onClick={() => this.props.navigate("/")}
                       style={{ color: "var(--text-primary)", textDecoration: "none", transition: "all var(--transition-fast)" }} >
@@ -117,10 +117,27 @@ class ClientAppointmentClass extends React.Component {
             </div>
           </div>
         </div>
-
-        <Dialog
-          open={this.state.showAppointmentModal} onClose={() => this.setState({ showAppointmentModal: false })} maxWidth="md" fullWidth>
-          <Appointment reload={this.load} appoitmentData={this.state.appoitmentData} establishment={this.state.establishment} />
+        <Dialog open={this.state.showAppointmentModal} onClose={() => this.setState({ showAppointmentModal: false })} maxWidth="md" fullWidth>
+          <Appointment reload={this.load} appoitmentData={this.state.appoitmentData} establishment={this.state.establishment} isPublic={true} finishPublicAppointment={this.finishPublicAppointment} />
+        </Dialog>
+        <Dialog open={this.state.showSuccessModal} maxWidth="xs" fullWidth>
+          <div className="p-4 text-center">
+            <div className="mx-auto mb-3 d-flex align-items-center justify-content-center" 
+              style={{ width: 90, height: 90, borderRadius: "50%", background: "#22c55e", animation: "scaleIn 0.4s ease-out" }}>
+              <i className="fas fa-check text-white" style={{ fontSize: 40 }}></i>
+            </div>
+            <h5 className="fw-bold mb-4">Agendamento realizado com sucesso</h5>
+            <div className="text-start text-muted mb-4" style={{ fontSize: "0.95rem" }}>
+              <div><strong>Cliente:</strong> {this.state.successData?.cliente?.nome}</div>
+              <div><strong>Telefone:</strong> {this.state.successData?.cliente?.celular}</div>
+              <div><strong>Horário:</strong> {this.state.successData?.dateInfo?.hour}</div>
+              <div><strong>Serviço:</strong> {this.state.successData?.service?.nome}</div>
+              <div><strong>Observações:</strong> {this.state.successData?.cliente?.observacao}</div>
+            </div>
+            <button className="btn btn-success w-100" onClick={this.closeFinishedModal} style={{ padding: "12px", fontWeight: 600, borderRadius: "var(--radius-lg)" }}>
+              Voltar para tela inicial
+            </button>
+          </div>
         </Dialog>
       </>
     )

@@ -20,9 +20,9 @@ export async function apiRequest({ method = "GET", route, params, body }) {
 
     // Body (POST/PUT/PATCH/DELETE)
     if (body) {
-        const establishment = getEstabelecimento()
-        body.estabelecimentoId = establishment.id
-        body.updatedBy = getUsuario()
+        const establishment = getEstabelecimento() ?? body?.establishmentId
+        body.estabelecimentoId = establishment.id ?? body?.establishmentId
+        body.updatedBy = getUsuario() ?? ""
         options.body = JSON.stringify(body);
     }
 

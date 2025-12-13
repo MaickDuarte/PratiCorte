@@ -8,7 +8,6 @@ import { hourStillAvailable, verifyServiceTimeInBlocks } from '../../services/ap
 class Appointment extends react.Component {
     constructor(props) {
         super(props);
-        console.log(props.appoitmentData)
         this.state = {
             sessao: getSessao(),
             editingAppointment: props.appoitmentData?.appointment || null,
@@ -18,7 +17,7 @@ class Appointment extends react.Component {
             appoitmentSubTitle:'',
             appointmentsStep: props.appoitmentData?.mininumStep || 1,
             mininumStep: props.appoitmentData?.mininumStep || 1,
-            establishment: getEstabelecimento(),
+            establishment: props.establishment ?? getEstabelecimento(),
             availableHours: [],
             providers: [],
             appointments: [],
@@ -53,7 +52,7 @@ class Appointment extends react.Component {
             await this.setAvailableHours(day)
             this.handleNextStep()
         } catch (error) {
-            alert("Erro ao buscar horários disponíveis:", error)
+            alert("Erro ao buscar horários disponíveis", error)
         } finally {
             this.setState({ isloading: false })
         }
@@ -191,15 +190,16 @@ class Appointment extends react.Component {
                 await addAppointmentAPI(data)
                 alert("Agendamento feito com sucesso!")
                 this.cleanFields()
+                this.props.reload(data)
+                this.setState({ appointmentsStep: 1, selectedProvider: null }, () => {
+                    this.handleStepTitle()
+                })
             } catch (error) {
+                alert("Erro ao realizar agendamento")
                 console.error("Erro ao realizar agendamento:", error.message)
+                this.setState({ isloading: false })
             }
-            this.props.reload(data)
         }
-        this.setState({ appointmentsStep: 1, selectedProvider: null }, () => {
-            this.handleStepTitle()
-        })
-        console.log("Agendamento finalizado com sucesso!")
     }
 
     updateAppointment = async () => {

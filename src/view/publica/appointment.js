@@ -7,6 +7,7 @@ import { getActiveUsersAppointmentAllowed } from "../../store/collections/userWo
 import { groupAgendamentosByDayOfWeek, completeAvailableHours } from "../../services/appointment/appointmentService"
 import { getEstablishmentById } from "../../store/collections/establishmentWorker"
 import { PhoneNumberFormat, DocumentFormat, isEmpty } from "../../shared/utils"
+import { getOpeningHours } from "../../store/collections/openingHoursWorker";
 
 export const ClientAppointment = () => {
   const { id } = useParams()
@@ -37,21 +38,18 @@ class ClientAppointmentClass extends React.Component {
   load = async () => {
     try {
       const establishment = await getEstablishmentById(this.props.estabelecimentoId)
+      this.setState({ establishment })
+
       const today = new Date()
       const endDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7)
-      const appointments = await getAppointmentsByDateAPI(
-        establishment.id,
-        today,
-        endDate
-      )
+      const appointments = await getAppointmentsByDateAPI(establishment.id, today, endDate)
       const groupedAppointments = groupAgendamentosByDayOfWeek(appointments)
+      this.setState({ appointments: groupedAppointments })
+      
       const providers = await getActiveUsersAppointmentAllowed(establishment.id)
-      const horarios = establishment.horarios || []
+      const horarios = await getOpeningHours(establishment.id)
       const completedAvailableHours = completeAvailableHours(horarios[0] ?? [])
-
       this.setState({
-        establishment,
-        appointments: groupedAppointments,
         appoitmentData: {
           horarios: completedAvailableHours,
           providers,
@@ -122,7 +120,7 @@ class ClientAppointmentClass extends React.Component {
 
         <Dialog
           open={this.state.showAppointmentModal} onClose={() => this.setState({ showAppointmentModal: false })} maxWidth="md" fullWidth>
-          <Appointment reload={this.load} appoitmentData={this.state.appoitmentData} isPublic={true} />
+          <Appointment reload={this.load} appoitmentData={this.state.appoitmentData} establishment={this.state.establishment} />
         </Dialog>
       </>
     )

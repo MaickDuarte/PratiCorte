@@ -8,6 +8,7 @@ import { groupAgendamentosByDayOfWeek, completeAvailableHours } from "../../serv
 import { getEstablishmentById } from "../../store/collections/establishmentWorker"
 import { PhoneNumberFormat, DocumentFormat, isEmpty } from "../../shared/utils"
 import { getOpeningHours } from "../../store/collections/openingHoursWorker"
+import { PublicNavBar } from "../../components/publicNavBar"
 
 export const ClientAppointment = () => {
   const { id } = useParams()
@@ -70,7 +71,8 @@ class ClientAppointmentClass extends React.Component {
     }
     return (
       <>
-        <div className="container py-4">
+        <PublicNavBar />
+        <div className="container py-4 mt-5">
           <div className="card shadow-sm border-0 mb-4">
             <div className="card-body position-relative">
               <div className="dropdown position-absolute" style={{ top: 16, right: 16 }} >

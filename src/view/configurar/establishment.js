@@ -4,6 +4,7 @@ import { getEstabelecimento}  from "../../config/auth";
 import { isEmpty, isValidPhoneNumber, PhoneNumberFormat, PhoneNumberInput, removeSimbols, isValidDocument, DocumentFormat } from "../../shared/utils";
 import { updateEstablishment } from "../../store/collections/establishmentWorker";
 import { setEstabelecimento } from "../../config/auth";
+import { QRCodeCanvas } from "qrcode.react";
 
 class Establishment extends React.Component {
     constructor(props) {
@@ -85,6 +86,17 @@ class Establishment extends React.Component {
         return true
     }
 
+    downloadQRCode = () => {
+        const canvas = document.getElementById("qrcode-public-link")
+        const pngUrl = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream")
+        const downloadLink = document.createElement("a")
+        downloadLink.href = pngUrl
+        downloadLink.download = "qrcode-agendamento.png"
+        document.body.appendChild(downloadLink)
+        downloadLink.click()
+        document.body.removeChild(downloadLink)
+    }
+
     render() {
         return (
             <>
@@ -104,6 +116,17 @@ class Establishment extends React.Component {
                                     <div> Endereço: {!isEmpty(this.state.establishment?.endereco) ? this.state.establishment?.endereco : ("Não informado")}</div>
                                     <div> Documento: {!isEmpty(this.state.establishment?.documento) ? (<DocumentFormat value={this.state.establishment?.documento} />) : "Não informado"}</div>
                                     <div> Link para agendamento público: <a href={`/estabelecimento/${this.state.establishment?.id}/marcar`} target="_blank" rel="noreferrer">{`${window.location.origin}/estabelecimento/${this.state.establishment?.id}/marcar`}</a></div>
+                                    <div className="d-flex align-items-center gap-4 mt-3">
+                                        <QRCodeCanvas
+                                            id="qrcode-public-link"
+                                            value={`${window.location.origin}/estabelecimento/${this.state.establishment?.id}/marcar`}
+                                            size={150}
+                                            level="H"
+                                        />
+                                        <button className="btn btn-outline-primary" onClick={this.downloadQRCode}>
+                                            Baixar QR Code para agendamentos.
+                                        </button>
+                                    </div>
                                 </div>
                             ) : (
                                 <div className="mb-3">

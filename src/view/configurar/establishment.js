@@ -103,6 +103,7 @@ class Establishment extends React.Component {
                                     <div> Celular: {!isEmpty(this.state.establishment?.celular) ? (<PhoneNumberFormat value={this.state.establishment?.celular} />) : ("Não informado")}</div>
                                     <div> Endereço: {!isEmpty(this.state.establishment?.endereco) ? this.state.establishment?.endereco : ("Não informado")}</div>
                                     <div> Documento: {!isEmpty(this.state.establishment?.documento) ? (<DocumentFormat value={this.state.establishment?.documento} />) : "Não informado"}</div>
+                                    <div> Link para agendamento público: <a href={`/estabelecimento/${this.state.establishment?.id}/marcar`} target="_blank" rel="noreferrer">{`${window.location.origin}/estabelecimento/${this.state.establishment?.id}/marcar`}</a></div>
                                 </div>
                             ) : (
                                 <div className="mb-3">

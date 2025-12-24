@@ -39,7 +39,7 @@ class History extends React.Component {
     }
 
     applyFilter = async () => {
-        var appointments = await getAppointmentByProviderAndDateAPI(this.state.providersIds, this.state.startDate, this.state.endDate)
+        var appointments = await getAppointmentByProviderAndDateAPI(this.state.providersIds[0], this.state.startDate, this.state.endDate)
         this.setState({ 
             allAppointments: appointments,
          },() => {

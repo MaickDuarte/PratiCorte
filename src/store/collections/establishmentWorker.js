@@ -14,7 +14,7 @@ export const getEstablishmentByUser = async (user) => {
     return await getDoc({
         collection: "estabelecimentos",
         queries: [
-            where("email", "==", user.email),
+            where("id", "==", user.estabelecimentoId),
         ]
     })
 }

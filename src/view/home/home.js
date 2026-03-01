@@ -63,35 +63,38 @@ class Home extends React.Component {
         return (
             <>
                 <NavBar />
-                <div className="container py-4">
-                    <div className="row mb-4">
-                        <div className="col-12">
-                            <div className="card shadow-lg border-0" style={{ 
-                                borderRadius: 'var(--radius-xl)', 
-                                background: 'var(--bg-primary)'
-                            }}>
-                                <div className="card-body p-4 text-center">
-                                    <button className="btn btn-success btn-lg" 
-                                            onClick={() => this.setState({ showAppointmentModal: true })}
-                                            style={{
-                                                padding: 'var(--spacing-md) var(--spacing-xl)',
-                                                fontSize: 'var(--font-size-base)',
-                                                fontWeight: 'var(--font-weight-semibold)',
-                                                borderRadius: 'var(--radius-lg)'
-                                            }}>
-                                        <i className="fas fa-calendar-plus me-2"></i>
-                                        Marcar Horário
-                                    </button>
+                { 
+                    this.state.appoitmentData &&
+                    <div className="container py-4">
+                        <div className="row mb-4">
+                            <div className="col-12">
+                                <div className="card shadow-lg border-0" style={{ 
+                                    borderRadius: 'var(--radius-xl)', 
+                                    background: 'var(--bg-primary)'
+                                }}>
+                                    <div className="card-body p-4 text-center">
+                                        <button className="btn btn-success btn-lg" 
+                                                onClick={() => this.setState({ showAppointmentModal: true })}
+                                                style={{
+                                                    padding: 'var(--spacing-md) var(--spacing-xl)',
+                                                    fontSize: 'var(--font-size-base)',
+                                                    fontWeight: 'var(--font-weight-semibold)',
+                                                    borderRadius: 'var(--radius-lg)'
+                                                }}>
+                                            <i className="fas fa-calendar-plus me-2"></i>
+                                            Marcar Horário
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-12">
-                            <History appointments={this.state.appointments} reload={this.load} appoitmentData={this.state.appoitmentData}/>
+                        <div className="row">
+                            <div className="col-12">
+                                <History appointments={this.state.appointments} reload={this.load} appoitmentData={this.state.appoitmentData}/>
+                            </div>
                         </div>
                     </div>
-                </div>
+                }
                 <Dialog open={this.state.showAppointmentModal} onClose={() => this.setState({ showAppointmentModal: false })} maxWidth="md" fullWidth>
                     <Appointment reload={this.load} appoitmentData={this.state.appoitmentData}/>
                 </Dialog>

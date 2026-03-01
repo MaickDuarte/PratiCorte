@@ -64,7 +64,8 @@ class AppointmentCard extends React.Component {
         return (
             <div className={`card ${this.state.statusColor} mb-2`}>
                 <div className="card-header">
-                    <strong>Status:</strong> {this.state.status}<br />
+                    <strong title={this.state.appointment?.id} onClick={() => {navigator.clipboard.writeText(this.state.appointment.id);}}>
+                        Status:</strong> {this.state.status}<br />
                     <strong>Data:</strong> {secondsToDateString(this.state.appointment.dateInfo?.date._seconds)}<br />
                     <strong>Horário:</strong> {hoursArrayToString(this.state.appointment.dateInfo?.hour)}
                     </div>

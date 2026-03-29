@@ -5,7 +5,7 @@ import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 import { Portuguese } from "flatpickr/dist/l10n/pt.js";
 import { getAppointmentByProviderAndDateAPI } from "../../store/collections/appointmentWorker";
-import { getActiveUsersAppointmentAllowed } from '../../store/collections/userWorker';
+import { getActiveUsersAppointmentAllowedAPI } from '../../store/collections/userWorker';
 import { groupByProviderAndDate } from '../../services/appointment/appointmentService';
 import { secondsToDateString, hoursArrayToString } from "../../shared/utils";
 
@@ -28,7 +28,7 @@ class History extends React.Component {
     }
 
     load = async () => {
-        const providers = await getActiveUsersAppointmentAllowed(this.state.establishment.id)
+        const providers = await getActiveUsersAppointmentAllowedAPI(this.state.establishment.id)
         const providersIds = providers.map(p => p.id)
         this.setState({ 
             providers: providers,

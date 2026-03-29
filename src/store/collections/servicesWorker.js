@@ -2,7 +2,6 @@ import { addDoc, getAllDocs, updateDoc, deleteDoc } from "./collectionBaseWorker
 import { apiRequest } from "../../config/api";
 
 export const addServiceAPI = async (data) => {
-    console.log(data)
     return await apiRequest({
         method: "POST",
         route: "services/addService",
@@ -21,7 +20,6 @@ export const updateServiceAPI = async (data) => {
 
 
 export const getServicesAPI = async (id) => {
-    console.log(id)
     return await apiRequest({
         method: "POST",
         route: "services/getServices",
@@ -32,7 +30,6 @@ export const getServicesAPI = async (id) => {
 }
 
 export const deleteServiceAPI = async (data) => {
-    console.log(data)
     return await apiRequest({
         method: "POST",
         route: "services/deleteService",

@@ -1,43 +1,57 @@
-import { addDoc, getDoc, getAllDocs, updateDoc, deleteDoc } from "./collectionBaseWorker";
-import { where } from "firebase/firestore"
+import { apiRequest } from "../../config/api";
 
-export const addUser = async (data) => {
-    await addDoc({ collection: "usuarios", data: data })
-}
 
-export const getUserByEmail = async (email) => {
-   return await getDoc({
-        collection: "usuarios",
-        queries: [
-            where("email", "==", email),
-        ]
+export const addUserAPI = async (data) => {
+    return await apiRequest({
+        method: "POST",
+        route: "users/addUser",
+        body: data
     })
 }
 
-export const getUsers = async (id) => {
-    return await getAllDocs({
-        collection: "usuarios",
-        queries: [
-            where("estabelecimentoId", "==", id),
-        ]
+export const getUserByEmailAPI = async (email) => {
+    console.log(email)
+    return await apiRequest({
+        method: "POST",
+        route: "users/getUserByEmail",
+        body: {
+            email,
+        }
     })
 }
 
-export const getActiveUsersAppointmentAllowed = async (id) => {
-    return await getAllDocs({
-        collection: "usuarios",
-        queries: [
-            where("estabelecimentoId", "==", id),
-            where("status", "==", "active"),
-            where("isProvider", "==", "true")
-        ]
+export const getUsersAPI = async (estabelecimentoId) => {
+    return await apiRequest({
+        method: "POST",
+        route: "users/getUsers",
+        body: {
+            estabelecimentoId,
+        }
     })
 }
 
-export const updateUser = async (data) => {
-    return await updateDoc({ collection: "usuarios", data: data })
+export const getActiveUsersAppointmentAllowedAPI = async (estabelecimentoId) => {
+    return await apiRequest({
+        method: "POST",
+        route: "users/getActiveUsersAppointmentAllowed",
+        body: {
+            estabelecimentoId,
+        }
+    })
 }
 
-export const deleteUser = async (data) => {
-    return await deleteDoc({ collection: "usuarios", data: data })
+export const updateUserAPI = async (data) => {
+    return await apiRequest({
+        method: "POST",
+        route: "users/updateUser",
+        body: data
+    })
+}
+
+export const deleteUserAPI = async (data) => {
+    return await apiRequest({
+        method: "POST",
+        route: "users/deleteUser",
+        body: data
+    })
 }

@@ -11,10 +11,11 @@ export const getEstablishmentById = async (id) => {
 }
 
 export const getEstablishmentByUser = async (user) => {
+    const userData = Array.isArray(user) ? user[0] : user;
     return await getDoc({
         collection: "estabelecimentos",
         queries: [
-            where("id", "==", user.estabelecimentoId),
+            where("id", "==", userData.estabelecimentoId),
         ]
     })
 }

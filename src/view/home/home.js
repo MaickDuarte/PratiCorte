@@ -2,7 +2,7 @@ import React from "react";
 import { getSessao, getEstabelecimento } from "../../config/auth";
 import { NavBar } from "../../components/navbar";
 import { getAppointmentsByDate, getAppointmentsByDateAPI } from "../../store/collections/appointmentWorker";
-import { getActiveUsersAppointmentAllowed } from '../../store/collections/userWorker';
+import { getActiveUsersAppointmentAllowedAPI } from '../../store/collections/userWorker';
 import { Appointment } from "./appointment";
 import { History } from "./history";
 import { groupAgendamentosByDayOfWeek, completeAvailableHours } from "../../services/appointment/appointmentService";
@@ -33,7 +33,7 @@ class Home extends React.Component {
             const appointments = await getAppointmentsByDateAPI(this.state.establishment.id, today, endDate)
             const groupedAppointments = groupAgendamentosByDayOfWeek(appointments)
 
-            const providers = await getActiveUsersAppointmentAllowed(this.state.establishment.id)
+            const providers = await getActiveUsersAppointmentAllowedAPI(this.state.establishment.id)
             const horarios = this.state.sessao.horarios
             const completedAvailableHours = completeAvailableHours(horarios[0] ?? [])
             

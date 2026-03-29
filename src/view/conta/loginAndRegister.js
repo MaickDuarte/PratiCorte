@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from '../../config/firebase'
 import { addEstablishment } from '../../store/collections/registerWorker'
-import { addUser } from '../../store/collections/userWorker'
+import { addUserAPI } from '../../store/collections/userWorker'
 import { checkUser, handleLogin } from "../../config/auth";
 import { isEmpty, removeSimbols, isValidDocument } from "../../shared/utils";
 
@@ -248,7 +248,7 @@ class Register extends React.Component {
                     celular: data.phoneNumber,
                     estabelecimentoId: establishmentCreated.id,
                 }
-                await addUser(userData)
+                await addUserAPI(userData)
                 handleLogin(data.email, data.password, (isLoading) => this.setState({ isLoading }));
             } catch (error) {
                 if (error.message === "Firebase: Error (auth/email-already-in-use).") {

@@ -1,7 +1,7 @@
 import React from "react";
 import { NavBar } from "../../components/navbar"
 import { isEmpty, PriceFormat } from "../../shared/utils";
-import { addUser, getUsers, updateUser, deleteUser } from "../../store/collections/userWorker";
+import { addUserAPI, getUsersAPI, updateUserAPI, deleteUserAPI } from "../../store/collections/userWorker";
 import { getServicesAPI } from "../../store/collections/servicesWorker";
 import { getEstabelecimento } from "../../config/auth";
 import Dialog from '@mui/material/Dialog';
@@ -37,7 +37,7 @@ class Users extends React.Component {
     }
 
     load = async () => {
-        const users = await getUsers(this.state.establishment.id)
+        const users = await getUsersAPI(this.state.establishment.id)
         this.setState({ users: users })
         const services = await getServicesAPI(this.state.establishment.id)
         this.setState({ services: services })
@@ -60,7 +60,7 @@ class Users extends React.Component {
             
             if (this.verifyFields(data)) {
                 console.log('Validação passou, salvando...')
-                const result = await addUser(data)
+                const result = await addUserAPI(data)
                 console.log('Resultado do salvamento:', result)
                 alert("Usuário cadastrado com sucesso!")
                 this.load()
@@ -131,7 +131,7 @@ class Users extends React.Component {
         }
         if (this.verifyFields(data, false)) {
             try {
-                await updateUser(data)
+                await updateUserAPI(data)
                 this.load()
                 this.cleanFields()
                 this.hideEditingUserModal()
@@ -142,7 +142,7 @@ class Users extends React.Component {
     }
 
     handleDeleteUser = async (data) => {
-        const result = await deleteUser(data)
+        const result = await deleteUserAPI(data)
         if (result) {
             alert("Serviço excluído com sucesso!")
             this.load()

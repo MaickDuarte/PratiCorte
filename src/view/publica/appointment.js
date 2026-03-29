@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom"
 import Dialog from "@mui/material/Dialog"
 import { Appointment } from "../home/appointment"
 import { getAppointmentsByDateAPI } from "../../store/collections/appointmentWorker"
-import { getActiveUsersAppointmentAllowed } from "../../store/collections/userWorker"
+import { getActiveUsersAppointmentAllowedAPI } from "../../store/collections/userWorker"
 import { groupAgendamentosByDayOfWeek, completeAvailableHours } from "../../services/appointment/appointmentService"
 import { getEstablishmentById } from "../../store/collections/establishmentWorker"
 import { PhoneNumberFormat, DocumentFormat, isEmpty } from "../../shared/utils"
@@ -41,7 +41,7 @@ class ClientAppointmentClass extends React.Component {
       const appointments = await getAppointmentsByDateAPI(establishment.id, today, endDate)
       const groupedAppointments = groupAgendamentosByDayOfWeek(appointments)
       this.setState({ appointments: groupedAppointments })
-      const providers = await getActiveUsersAppointmentAllowed(establishment.id)
+      const providers = await getActiveUsersAppointmentAllowedAPI(establishment.id)
       const horarios = await getOpeningHours(establishment.id)
       const completedAvailableHours = completeAvailableHours(horarios[0] ?? [])
       this.setState({

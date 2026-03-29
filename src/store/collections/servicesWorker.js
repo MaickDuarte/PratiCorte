@@ -1,23 +1,41 @@
 import { addDoc, getAllDocs, updateDoc, deleteDoc } from "./collectionBaseWorker";
-import { where } from "firebase/firestore"
+import { apiRequest } from "../../config/api";
 
-export const addService = async (data) => {
-    return await addDoc({ collection: "servicos", data: data })
-}
-
-export const updateService = async (data) => {
-    return await updateDoc({ collection: "servicos", data: data })
-}
-
-export const getServices = async (id) => {
-    return await getAllDocs({
-         collection: "servicos" ,
-         queries: [
-            where("estabelecimentoId", "==", id)
-        ]
+export const addServiceAPI = async (data) => {
+    console.log(data)
+    return await apiRequest({
+        method: "POST",
+        route: "services/addService",
+        body: data
     })
 }
 
-export const deleteService = async (data) => {
-    return await deleteDoc({ collection: "servicos", data: data })
+export const updateServiceAPI = async (data) => {
+    return await apiRequest({
+        method: "POST",
+        route: "services/updateService",
+        body: data
+    })
+}
+
+
+
+export const getServicesAPI = async (id) => {
+    console.log(id)
+    return await apiRequest({
+        method: "POST",
+        route: "services/getServices",
+        body: {
+            id,
+        }
+    })
+}
+
+export const deleteServiceAPI = async (data) => {
+    console.log(data)
+    return await apiRequest({
+        method: "POST",
+        route: "services/deleteService",
+        body: data
+    })
 }

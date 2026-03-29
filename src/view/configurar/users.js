@@ -2,7 +2,7 @@ import React from "react";
 import { NavBar } from "../../components/navbar"
 import { isEmpty, PriceFormat } from "../../shared/utils";
 import { addUser, getUsers, updateUser, deleteUser } from "../../store/collections/userWorker";
-import { getServices } from "../../store/collections/servicesWorker";
+import { getServicesAPI } from "../../store/collections/servicesWorker";
 import { getEstabelecimento } from "../../config/auth";
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
@@ -39,7 +39,7 @@ class Users extends React.Component {
     load = async () => {
         const users = await getUsers(this.state.establishment.id)
         this.setState({ users: users })
-        const services = await getServices(this.state.establishment.id)
+        const services = await getServicesAPI(this.state.establishment.id)
         this.setState({ services: services })
     }
 

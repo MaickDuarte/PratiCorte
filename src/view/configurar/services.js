@@ -2,7 +2,7 @@ import React from "react";
 import { NavBar } from "../../components/navbar"
 import { TimeInput, isEmpty, convertTimeToMinutes, OrderByField, saveTime, PriceFormat } from "../../shared/utils";
 import CurrencyInput from "../../components/CurrencyInput";
-import { addService, getServices, deleteService, updateService } from "../../store/collections/servicesWorker";
+import { addServiceAPI, getServicesAPI, deleteServiceAPI, updateServiceAPI } from "../../store/collections/servicesWorker";
 import { getEstabelecimento } from "../../config/auth";
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
@@ -48,7 +48,7 @@ class Services extends React.Component {
             
             if (this.verifyFields(data)) {
                 console.log('Validação passou, salvando...')
-                const result = await addService(data)
+                const result = await addServiceAPI(data)
                 console.log('Resultado do salvamento:', result)
                 alert("Serviço cadastrado com sucesso!")
                 this.load()
@@ -91,13 +91,13 @@ class Services extends React.Component {
     }
 
     load = async () => {
-        const services = await getServices(this.state.establishment.id)
+        const services = await getServicesAPI(this.state.establishment.id)
         const ordered = OrderByField(services, "nome")
         this.setState({ services: ordered })
     }
 
     handleDeleteService = async (data) => {
-        const result = await deleteService(data)
+        const result = await deleteServiceAPI(data)
         if (result) {
             alert("Serviço excluído com sucesso!")
             this.load()
@@ -133,7 +133,7 @@ class Services extends React.Component {
         }
         if (this.verifyFields(data)) {
             try {
-                await updateService(data)
+                await updateServiceAPI(data)
                 this.load()
                 this.cleanFields()
                 this.hideEditingServiceModal()

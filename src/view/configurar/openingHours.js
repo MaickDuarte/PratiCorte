@@ -2,7 +2,7 @@ import React from "react";
 import { NavBar } from "../../components/navbar"
 import { TimeInput } from "../../shared/utils";
 import { getEstabelecimento, setHorarios, getHorarios } from "../../config/auth";
-import { getOpeningHours, addOpeningHours, updateOpeningHours } from "../../store/collections/openingHoursWorker";
+import { getOpeningHoursAPI, addOpeningHoursAPI, updateOpeningHoursAPI } from "../../store/collections/openingHoursWorker";
 import { isEmpty } from "../../shared/utils";
 import { isValidMinutes } from "../../services/appointment/appointmentService";
 
@@ -32,7 +32,7 @@ class OpeningHours extends React.Component {
     load = async () => {
         try {
             console.log('Carregando horários para establishment:', this.state.establishment.id)
-            const horarios = await getOpeningHours(this.state.establishment.id)
+            const horarios = await getOpeningHoursAPI(this.state.establishment.id)
             console.log('Horários retornados do banco:', horarios)
             
             if (horarios && horarios.length > 0 && horarios[0].horarios) {
@@ -84,10 +84,10 @@ class OpeningHours extends React.Component {
                 if (this.state.horariosId) {
                     console.log('Atualizando horários existentes...')
                     const updateData = { id: this.state.horariosId, ...data }
-                    await updateOpeningHours(updateData)
+                    await updateOpeningHoursAPI(updateData)
                 } else {
                     console.log('Criando novos horários...')
-                    const result = await addOpeningHours(data)
+                    const result = await addOpeningHoursAPI(data)
                     console.log('Resultado da criação:', result)
                     if (result && result.id) {
                         this.setState({ horariosId: result.id })

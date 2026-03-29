@@ -1,19 +1,33 @@
-import { addDoc, getDoc, updateDoc, getAllDocs } from "./collectionBaseWorker";
-import { where } from "firebase/firestore"
+import { apiRequest } from "../../config/api";
 
-export const addOpeningHours = async (data) => {
-    return await addDoc({ collection: "openingHours", data: data })
-}
+export const addOpeningHoursAPI = async (data) => {
+    return await apiRequest({
+        method: "POST",
+        route: "openingHours/addOpeningHours",
+        body: data
+    });
+};
 
-export const updateOpeningHours = async (data) => {
-    return await updateDoc({ collection: "openingHours", data: data })
-}
+export const updateOpeningHoursAPI = async (data) => {
+    return await apiRequest({
+        method: "POST",
+        route: "openingHours/updateOpeningHours",
+        body: data
+    });
+};
 
-export const getOpeningHours = async (id) => {
-    return await getAllDocs({
-         collection: "openingHours" ,
-         queries: [
-            where("estabelecimentoId", "==", id)
-        ]
-    })
-}
+export const getOpeningHoursAPI = async (estabelecimentoId) => {
+    return await apiRequest({
+        method: "POST",
+        route: "openingHours/getOpeningHours",
+        body: { estabelecimentoId }
+    });
+};
+
+export const getOpeningHoursByIdAPI = async (id) => {
+    return await apiRequest({
+        method: "POST",
+        route: "openingHours/getOpeningHoursById",
+        body: { id }
+    });
+};

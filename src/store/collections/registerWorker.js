@@ -1,5 +1,5 @@
-import { addDoc } from "./collectionBaseWorker";
+import { addEstablishmentAPI } from "./establishmentWorker";
 
 export const addEstablishment = async (data) => {
-    return await addDoc({ collection: "estabelecimentos", data: data })
-}
+    return await addEstablishmentAPI(data);
+};

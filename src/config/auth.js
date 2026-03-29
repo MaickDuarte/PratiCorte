@@ -2,7 +2,7 @@ import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from "../config/firebase";
 import { getUserByEmailAPI } from "../store/collections/userWorker";
 import { getEstablishmentByUser } from "../store/collections/establishmentWorker";
-import { getOpeningHours } from "../store/collections/openingHoursWorker";
+import { getOpeningHoursAPI } from "../store/collections/openingHoursWorker";
 
 export const handleLogin = async (email, password, setLoading) => {
     setLoading(true)
@@ -10,7 +10,7 @@ export const handleLogin = async (email, password, setLoading) => {
         const userCredential = await signInWithEmailAndPassword(auth, email, password)
         const user = await getUserByEmailAPI(userCredential.user.email)
         const establishment = await getEstablishmentByUser(user)
-        const horarios = await getOpeningHours(establishment.id)
+        const horarios = await getOpeningHoursAPI(establishment.id)
         setSessao({ usuario: user, estabelecimento: establishment, horarios: horarios })
         window.location.href = "/home"
     } catch (error) {

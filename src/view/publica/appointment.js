@@ -7,7 +7,7 @@ import { getActiveUsersAppointmentAllowedAPI } from "../../store/collections/use
 import { groupAgendamentosByDayOfWeek, completeAvailableHours } from "../../services/appointment/appointmentService"
 import { getEstablishmentById } from "../../store/collections/establishmentWorker"
 import { PhoneNumberFormat, DocumentFormat, isEmpty } from "../../shared/utils"
-import { getOpeningHours } from "../../store/collections/openingHoursWorker"
+import { getOpeningHoursAPI } from "../../store/collections/openingHoursWorker"
 import { PublicNavBar } from "../../components/publicNavBar"
 
 export const ClientAppointment = () => {
@@ -42,7 +42,7 @@ class ClientAppointmentClass extends React.Component {
       const groupedAppointments = groupAgendamentosByDayOfWeek(appointments)
       this.setState({ appointments: groupedAppointments })
       const providers = await getActiveUsersAppointmentAllowedAPI(establishment.id)
-      const horarios = await getOpeningHours(establishment.id)
+      const horarios = await getOpeningHoursAPI(establishment.id)
       const completedAvailableHours = completeAvailableHours(horarios[0] ?? [])
       this.setState({
         appoitmentData: {

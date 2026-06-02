@@ -200,7 +200,7 @@ export const groupByProviderAndDate = (allAppointments) => {
     }, [])
 
     const sortedProviders = providers.map(provider => {
-        const sortedDates = provider.dates.map(d => ({...d,appointments: d.appointments.sort((a, b) => a.dateInfo.hour[0].localeCompare(b.dateInfo.hour[0]))})).sort((a, b) => a.date - b.date)
+        const sortedDates = provider.dates.map(d => ({...d,appointments: d.appointments.sort((a, b) => b.dateInfo.hour[0].localeCompare(a.dateInfo.hour[0]))})).sort((a, b) => b.date - a.date)
         return {
             ...provider,
             dates: sortedDates

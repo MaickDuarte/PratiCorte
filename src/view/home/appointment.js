@@ -1,6 +1,6 @@
 import react from 'react';
 import { getEstabelecimento, getSessao } from '../../config/auth';
-import { isEmpty, PhoneNumberFormat, dateToString, PriceFormat, PhoneNumberInput, removeSimbols, hoursArrayToString } from '../../shared/utils';
+import { isEmpty, PhoneNumberFormat, dateToString, PriceFormat, PhoneNumberInput, removeSimbols, hoursArrayToString, isValidPhoneNumber } from '../../shared/utils';
 import { setAvailableHours } from '../../services/appointment/appointmentService';
 import { addAppointmentAPI, updateAppointmentAPI } from '../../store/collections/appointmentWorker';
 import { hourStillAvailable, verifyServiceTimeInBlocks } from '../../services/appointment/appointmentService';
@@ -180,13 +180,16 @@ class Appointment extends react.Component {
                 observacao: this.state.appointmentObservation ?? ""
             },
         }
+        if (!this.verifyFields(data)) {
+            return
+        }
         this.setState({ isloading: true });
         const availableHours = await setAvailableHours(this.state.selectedProvider.id, this.state.selectedDay, this.state.originalHourSelected)
         if (!await hourStillAvailable(availableHours, this.state.selectedHour)) {
             this.setState({ isloading: false })
             return alert("Horário não está mais disponível, selecione outro horário.");
         }
-        if (this.verifyFields(data) && this.verifyAppointmentStillAvailable) {
+        if (this.verifyAppointmentStillAvailable) {
             try {
                 await addAppointmentAPI(data)
                 this.cleanFields()
@@ -230,13 +233,16 @@ class Appointment extends react.Component {
                 observacao: this.state.appointmentObservation ?? ""
             },
         }
+        if (!this.verifyFields(data)) {
+            return
+        }
         this.setState({ isloading: true });
         const availableHours = await setAvailableHours(this.state.selectedProvider.id, this.state.selectedDay, this.state.originalHourSelected)
         if (!await hourStillAvailable(availableHours, this.state.selectedHour)) {
             this.setState({ isloading: false })
             return alert("Horário não está mais disponível, selecione outro horário.");
         }
-        if (this.verifyFields(data) && this.verifyAppointmentStillAvailable) {
+        if (this.verifyAppointmentStillAvailable) {
             try {
                 await updateAppointmentAPI(data)
                 alert("Agendamento atualizado com sucesso!")
@@ -255,6 +261,18 @@ class Appointment extends react.Component {
     }
 
     verifyFields = (data) => {
+        if (isEmpty(data.cliente?.nome?.trim())) {
+            alert("Informe o nome do cliente")
+            return false
+        }
+        if (isEmpty(data.cliente?.celular)) {
+            alert("Informe o celular do cliente")
+            return false
+        }
+        if (!isValidPhoneNumber(data.cliente?.celular)) {
+            alert("Informe um celular válido")
+            return false
+        }
         return true
     }
 

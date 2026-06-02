@@ -16,13 +16,19 @@ class Login extends React.Component {
             email: "",
             password: "",
             error: null,
-            isLoading: true
+            isLoading: false
         }
     }
 
     componentDidMount() {
         checkUser();
     }
+
+    handleSubmit = async () => {
+        if (this.state.isLoading) return
+        await handleLogin(this.state.email, this.state.password, (isLoading) => this.setState({ isLoading }))
+    }
+
     render() {
         return (
             <> 
@@ -92,6 +98,7 @@ class Login extends React.Component {
                                                    id="email" 
                                                    placeholder="exemplo@gmail.com"
                                                    style={{ paddingLeft: '2.5rem' }}
+                                                   disabled={this.state.isLoading}
                                                    onChange={(e) => this.setState({ email: e.target.value })}/>
                                         </div>
                                     </div>
@@ -119,6 +126,7 @@ class Login extends React.Component {
                                                    id="password" 
                                                    placeholder="••••••••"
                                                    style={{ paddingLeft: '2.5rem' }}
+                                                   disabled={this.state.isLoading}
                                                    onChange={(e) => this.setState({ password: e.target.value })}/>
                                         </div>
                                     </div>
@@ -136,15 +144,28 @@ class Login extends React.Component {
                                 </div>
                                 
                                 <button className="btn btn-primary w-100 mb-4" 
+                                        type="button"
+                                        disabled={this.state.isLoading}
                                         style={{ 
                                             padding: 'var(--spacing-md)',
                                             fontSize: 'var(--font-size-base)',
                                             fontWeight: 'var(--font-weight-semibold)',
                                             borderRadius: 'var(--radius-md)'
                                         }}
-                                        onClick={() => handleLogin(this.state.email, this.state.password, (isLoading) => this.setState({ isLoading }))}>
-                                    <i className="fas fa-sign-in-alt me-2"></i>
-                                    Entrar
+                                        onClick={this.handleSubmit}>
+                                    {
+                                        this.state.isLoading ? (
+                                            <>
+                                                <span className="spinner spinner-light"></span>
+                                                Entrando...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <i className="fas fa-sign-in-alt me-2"></i>
+                                                Entrar
+                                            </>
+                                        )
+                                    }
                                 </button>
                                 
                                 <div className="text-center">
